@@ -10,12 +10,17 @@ Player::Player(Texture2D* texture)
 
 void Player::Update(Vector2 moveDir, float delta)
 {
-    _movement.Update(_transform, moveDir, delta);
+    _movement.Update(_transform, moveDir, delta, _collisionMap);
 }
 
 void Player::SetPosition(Vector2 position)
 {
     _transform.position = position;
+}
+
+void Player::SetCollisionMap(const CollisionMap* collisionMap)
+{
+    _collisionMap = collisionMap;
 }
 
 Vector2 Player::GetPosition() const
