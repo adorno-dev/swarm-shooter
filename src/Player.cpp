@@ -2,9 +2,9 @@
 #include "GameConfig.hpp"
 #include "GameInput.hpp"
 
-Player::Player(Texture2D* texture)
+Player::Player(const std::string& textureName)
 {
-    _sprite.Init(texture);
+    _sprite.Init(textureName);
     _sprite.pivot = GameConfig::PLAYER_PIVOT;
     _transform.scale = GameConfig::PLAYER_SCALE;
     _movement.speed = GameConfig::PLAYER_SPEED;

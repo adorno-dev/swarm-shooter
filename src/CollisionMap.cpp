@@ -1,9 +1,10 @@
 #include "CollisionMap.hpp"
+#include "ResourceManager.hpp"
 #include "GameConfig.hpp"
 
-void CollisionMap::Init(const Image* img)
+void CollisionMap::Init(const std::string& name)
 {
-    _img = img;
+    _img = &RM::get().GetImage(name);
 }
 
 bool CollisionMap::IsWalkable(float x, float y) const

@@ -1,10 +1,11 @@
 #include "Sprite.hpp"
+#include "ResourceManager.hpp"
 
 bool Sprite::showDebug = false;
 
-void Sprite::Init(Texture2D* initTexture)
+void Sprite::Init(const std::string& textureName)
 {
-    texture = initTexture;
+    texture = &RM::get().GetTexture(textureName);
 }
 
 void Sprite::Draw(const Transform2D& transform) const

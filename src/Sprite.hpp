@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "Transform2D.hpp"
+#include <string>
 
 struct Sprite
 {
@@ -9,6 +10,6 @@ struct Sprite
     const Texture2D* texture = nullptr;
     Vector2 pivot = { 0.5f, 0.5f };
 
-    void Init(Texture2D* initTexture);
+    void Init(const std::string& initTexture);
     void Draw(const Transform2D& transform) const;
 };

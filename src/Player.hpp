@@ -10,7 +10,7 @@ class CollisionMap;
 class Player
 {
 public:
-    Player(Texture2D* texture);
+    Player(const std::string& textureName);
     void Draw() const;
     void Update(float delta);
     Vector2 GetPosition() const;
