@@ -49,8 +49,14 @@ int main()
     camera.offset = { halfW, halfH };
 
     Rectangle src, dst;
-
     BulletManager bullets;
+
+    Sprite testSprite;
+    testSprite.Init(RK::COCKROACH_MOVE, 64, 64, 8, 8.0f);
+
+    Transform2D testTransform;
+    testTransform.position = { GameConfig::MAP_W * 0.5f + 200.0f, GameConfig::MAP_H * 0.5f };
+    testTransform.scale = 1.4f;
 
     while (!WindowShouldClose())
     {
@@ -66,10 +72,9 @@ int main()
 
         player.Update(dt);
         bullets.Update(dt);
-
+        testSprite.Update(dt);
 
         camera.target = player.GetPosition();
-        
         camera.target.x = std::clamp(camera.target.x, halfW, GameConfig::MAP_W - halfW);
         camera.target.y = std::clamp(camera.target.y, halfH, GameConfig::MAP_H - halfH);
         
@@ -79,6 +84,7 @@ int main()
                 DrawTexture(background, 0, 0, WHITE);
                 player.Draw();
                 bullets.Draw();
+                testSprite.Draw(testTransform);
                 DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
             EndMode2D();
 

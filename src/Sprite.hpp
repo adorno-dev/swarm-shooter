@@ -1,7 +1,8 @@
 #pragma once
+#include <string>
+#include <vector>
 #include "raylib.h"
 #include "Transform2D.hpp"
-#include <string>
 
 struct Sprite
 {
@@ -12,7 +13,15 @@ struct Sprite
 
     int frameWidth = 0;
     int frameHeight = 0;
+    int frameCount = 1;
+    int currentFrame = 0;
+    float timer = 0.0f;
+    float frameDuration = 0.0f;
+    std::vector<Rectangle> sourceRects;
 
-    void Init(const std::string& initTexture);
+    void Init(const std::string& textureName);
+    void Init(const std::string& textureName, int fw, int fh, int count, float fps);
     void Draw(const Transform2D& transform) const;
+    void Update(float dt);
+    void Reset();
 };
