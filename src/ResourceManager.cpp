@@ -24,6 +24,7 @@ void ResourceManager::Load()
     loadTexture(RK::PLAYER, "survivor-idle_shotgun_0.png");
     loadTexture(RK::GAME_BG, "Floor.png");
     loadTexture(RK::GAME_FG, "Walls.png");
+    loadTexture(RK::BULLET, "bullet.png");
 
     loadImage(RK::GAME_BG_COLLISION, "gameBgCollision.png");
 

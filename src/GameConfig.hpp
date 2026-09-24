@@ -10,6 +10,7 @@ namespace GameConfig {
     constexpr float PLAYER_SPEED = 200.0f;
     constexpr float AIM_SENSITIVITY = 0.15f;
     constexpr Vector2 PLAYER_PIVOT = { 0.31f, 0.58f };
+    constexpr Vector2 PLAYER_MUZZLE_OFFSET = { 54.0f, 8.0f };
 
     // Collision
     constexpr unsigned char WALKABLE_THRESHOLD = 240;

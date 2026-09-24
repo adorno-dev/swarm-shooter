@@ -13,4 +13,6 @@ void GameInput::Update()
     _state.aimAngle += GetMouseDelta().x * (
         GameConfig::BASE_W / (float)GetScreenWidth()) * 
         GameConfig::AIM_SENSITIVITY;
+    
+    _state.shoot = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }

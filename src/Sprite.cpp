@@ -6,17 +6,19 @@ bool Sprite::showDebug = false;
 void Sprite::Init(const std::string& textureName)
 {
     texture = &RM::get().GetTexture(textureName);
+    frameWidth = texture->width;
+    frameHeight = texture->height;
 }
 
 void Sprite::Draw(const Transform2D& transform) const
 {
     if (!texture) return;
 
-    float w = texture->width * transform.scale;
-    float h = texture->height * transform.scale;
+    float w = frameWidth * transform.scale;
+    float h = frameHeight * transform.scale;
 
     Rectangle src = {
-        0, 0, (float)texture->width, (float)texture->height
+        0, 0, (float)frameWidth, (float)frameHeight
     };
 
     Rectangle dst = {

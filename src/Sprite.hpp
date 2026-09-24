@@ -10,6 +10,9 @@ struct Sprite
     const Texture2D* texture = nullptr;
     Vector2 pivot = { 0.5f, 0.5f };
 
+    int frameWidth = 0;
+    int frameHeight = 0;
+
     void Init(const std::string& initTexture);
     void Draw(const Transform2D& transform) const;
 };

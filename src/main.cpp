@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <vector>
 #include "raylib.h"
 #include "raymath.h"
 #include "GameConfig.hpp"
@@ -6,6 +7,7 @@
 #include "ResourceKeys.hpp"
 #include "GameInput.hpp"
 #include "CollisionMap.hpp"
+#include "Bullet.hpp"
 #include "Player.hpp"
 
 int main()
@@ -48,6 +50,8 @@ int main()
 
     Rectangle src, dst;
 
+    std::vector<Bullet> bullets;
+
     while (!WindowShouldClose())
     {
         if (IsKeyPressed(KEY_F1))
@@ -57,10 +61,19 @@ int main()
 
         dt = GetFrameTime();
 
+        if (GI::get().State().shoot)
+        {
+            bullets.emplace_back(
+                player.GetFiringPosition(), 
+                GI::get().State().aimAngle,
+                600.0f);
+        }
+
         player.Update(dt);
+        for (auto& b : bullets) b.Update(dt);
 
         camera.target = player.GetPosition();
-
+        
         camera.target.x = std::clamp(camera.target.x, halfW, mapW - halfW);
         camera.target.y = std::clamp(camera.target.y, halfH, mapH - halfH);
         
@@ -69,6 +82,7 @@ int main()
             BeginMode2D(camera);
                 DrawTexture(background, 0, 0, WHITE);
                 player.Draw();
+                for (auto& b : bullets) b.Draw();
                 DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
             EndMode2D();
 
@@ -77,6 +91,7 @@ int main()
             DrawText(TextFormat("Player: %.0f,%.0f", player.GetPosition().x, player.GetPosition().y), 12, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Camera: %.0f,%.0f", camera.target.x, camera.target.y), 256, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Aim: %.1f", GI::get().State().aimAngle), 512, GameConfig::BASE_H - 24, 20, LIME);
+            DrawText(TextFormat("Bullets: %d", (int)bullets.size()), 700, GameConfig::BASE_H - 24, 20, LIME);
 
         EndTextureMode();
 

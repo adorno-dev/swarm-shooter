@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "GameConfig.hpp"
 #include "GameInput.hpp"
+#include "raymath.h"
 
 Player::Player(const std::string& textureName)
 {
@@ -8,6 +9,7 @@ Player::Player(const std::string& textureName)
     _sprite.pivot = GameConfig::PLAYER_PIVOT;
     _transform.scale = GameConfig::PLAYER_SCALE;
     _movement.speed = GameConfig::PLAYER_SPEED;
+    _muzzleOffset = GameConfig::PLAYER_MUZZLE_OFFSET;
 }
 
 void Player::Update(float delta)
@@ -28,6 +30,13 @@ void Player::SetCollisionMap(const CollisionMap* collisionMap)
 Vector2 Player::GetPosition() const
 {
     return _transform.position;
+}
+
+Vector2 Player::GetFiringPosition() const
+{
+    float rad = _transform.rotation * DEG2RAD;
+    Vector2 rotated = Vector2Rotate(_muzzleOffset, rad);
+    return Vector2Add(_transform.position, rotated);
 }
 
 void Player::Draw() const

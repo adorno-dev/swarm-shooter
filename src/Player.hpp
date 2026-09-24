@@ -14,6 +14,7 @@ public:
     void Draw() const;
     void Update(float delta);
     Vector2 GetPosition() const;
+    Vector2 GetFiringPosition() const;
     void SetPosition(Vector2 position);
     void SetCollisionMap(const CollisionMap* collisionMap);
 private:
@@ -21,4 +22,5 @@ private:
     Sprite _sprite;
     Movement _movement;
     const CollisionMap* _collisionMap = nullptr;
+    Vector2 _muzzleOffset = { 0.0f, 0.0f };
 };
