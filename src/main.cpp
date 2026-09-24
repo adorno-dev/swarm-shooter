@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "raylib.h"
+#include "raymath.h"
 #include "GameConfig.hpp"
+#include "GameInput.hpp"
 #include "CollisionMap.hpp"
 #include "Player.hpp"
 
@@ -24,6 +26,7 @@ int main()
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(GameConfig::BASE_W, GameConfig::BASE_H, "Swarm");
     SetTargetFPS(60);
+    DisableCursor();
     
     // Vector2 pos = GetMonitorPosition(0);
     // SetWindowSize(pos.x + 320, pos.y + 180);
@@ -62,12 +65,11 @@ int main()
         if (IsKeyPressed(KEY_F1))
             Sprite::showDebug = !Sprite::showDebug;
 
+        GI::get().Update();
+
         dt = GetFrameTime();
 
-        moveX = (IsKeyDown(KEY_D) ? 1.0f : 0.0f) - (IsKeyDown(KEY_A) ? 1.0f : 0.0f);
-        moveY = (IsKeyDown(KEY_S) ? 1.0f : 0.0f) - (IsKeyDown(KEY_W) ? 1.0f : 0.0f);
-
-        player.Update({moveX, moveY}, dt);
+        player.Update(dt);
 
         camera.target = player.GetPosition();
 
@@ -86,7 +88,7 @@ int main()
 
             DrawText(TextFormat("Player: %.0f,%.0f", player.GetPosition().x, player.GetPosition().y), 12, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Camera: %.0f,%.0f", camera.target.x, camera.target.y), 256, GameConfig::BASE_H - 24, 20, LIME);
-            DrawText(TextFormat("Map: %.0f,%.0f", mapW, mapH), 512, GameConfig::BASE_H - 24, 20, LIME);
+            DrawText(TextFormat("Aim: %.1f", GI::get().State().aimAngle), 512, GameConfig::BASE_H - 24, 20, LIME);
 
         EndTextureMode();
 

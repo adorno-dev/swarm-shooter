@@ -12,7 +12,7 @@ class Player
 public:
     Player(Texture2D* texture);
     void Draw() const;
-    void Update(Vector2 moveDir, float delta);
+    void Update(float delta);
     Vector2 GetPosition() const;
     void SetPosition(Vector2 position);
     void SetCollisionMap(const CollisionMap* collisionMap);
