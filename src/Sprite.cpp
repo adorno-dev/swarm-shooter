@@ -83,7 +83,7 @@ void Sprite::Draw(const Transform2D& transform) const
         h * pivot.y,
     };
 
-    DrawTexturePro(*texture, src, dst, origin, transform.rotation, WHITE);
+    DrawTexturePro(*texture, src, dst, origin, transform.rotation + rotationOffset, WHITE);
 
     if (showDebug)
         DrawCircle((int)transform.position.x, (int)transform.position.y, 2.0f, RED);
