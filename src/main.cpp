@@ -10,7 +10,7 @@
 #include "BulletManager.hpp"
 #include "Player.hpp"
 #include "Enemy.hpp"
-
+#include "EnemyManager.hpp"
 
 int main()
 {
@@ -52,14 +52,23 @@ int main()
     Rectangle src, dst;
     BulletManager bullets;
 
-    Enemy enemy;
-    enemy.SetPosition({ GameConfig::MAP_W * 0.5f + 200.0f, GameConfig::MAP_H * 0.5f });
-    enemy.SetPlayer(&player);
+    EnemyManager enemies;
+    enemies.Init(&player);
+    enemies.Spawn({ GameConfig::MAP_W * 0.5f + 200.0f, GameConfig::MAP_H * 0.5f });
 
     while (!WindowShouldClose())
     {
         if (IsKeyPressed(KEY_F1))
             Sprite::showDebug = !Sprite::showDebug;
+
+        if (IsKeyPressed(KEY_L))
+            for (int i = 0; i < 40; i++)
+                enemies.Spawn({ 
+                    RandomFloat(0.0f, GameConfig::MAP_W), 
+                    RandomFloat(0.0f, GameConfig::MAP_H)});
+
+        if (IsKeyPressed(KEY_K))
+            enemies.DeactivateAll();
 
         GI::get().Update();
 
@@ -70,7 +79,7 @@ int main()
 
         player.Update(dt);
         bullets.Update(dt);
-        enemy.Update(dt);
+        enemies.Update(dt);
 
         camera.target = player.GetPosition();
         camera.target.x = std::clamp(camera.target.x, halfW, GameConfig::MAP_W - halfW);
@@ -82,7 +91,7 @@ int main()
                 DrawTexture(background, 0, 0, WHITE);
                 player.Draw();
                 bullets.Draw();
-                enemy.Draw();
+                enemies.Draw();
                 DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
             EndMode2D();
 
@@ -91,7 +100,12 @@ int main()
             DrawText(TextFormat("Player: %.0f,%.0f", player.GetPosition().x, player.GetPosition().y), 12, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Camera: %.0f,%.0f", camera.target.x, camera.target.y), 256, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Aim: %.1f", GI::get().State().aimAngle), 512, GameConfig::BASE_H - 24, 20, LIME);
-            DrawText(TextFormat("Bullets: %d/%d", bullets.CountAlive(), bullets.GetPoolTotal()), 700, GameConfig::BASE_H - 24, 20, LIME);
+            DrawText(TextFormat("Bullets: %d/%d  Enemies: %d/%d", 
+                bullets.CountAlive(), 
+                bullets.GetPoolTotal(),
+                enemies.CountAlive(), 
+                enemies.GetPoolTotal()), 
+                700, GameConfig::BASE_H - 24, 20, LIME);
 
         EndTextureMode();
 

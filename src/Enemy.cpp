@@ -1,6 +1,7 @@
 #include "Enemy.hpp"
 #include "ResourceKeys.hpp"
 #include "Player.hpp"
+#include "GameConfig.hpp"
 
 Enemy::Enemy()
 {
@@ -18,6 +19,8 @@ void Enemy::Retarget()
 
 void Enemy::Update(float dt)
 {
+    if (!_alive) return;
+
     _retargetTimer -= dt;
     if (_retargetTimer < 0.0f)
         Retarget();
@@ -26,8 +29,27 @@ void Enemy::Update(float dt)
     _sprite.Update(dt);
 }
 
+void Enemy::Activate(Vector2 position)
+{
+    _alive = true;
+    _transform.position = position;
+    _retargetTimer = 0.0f;
+
+    TraceLog(LOG_INFO, "ENEMY: Activated");
+}
+
+void Enemy::Deactivate()
+{
+    _alive = false;
+    _transform.position = GameConfig::OFFSCREEN_POSITION;
+
+    TraceLog(LOG_INFO, "ENEMY: Deactivated");
+}
+
 void Enemy::Draw()
 {
+    if (!_alive) return;
+    
     _sprite.Draw(_transform);
 }
 

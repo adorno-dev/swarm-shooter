@@ -12,6 +12,9 @@ public:
     void Draw();
     void SetPosition(Vector2 position);
     void SetPlayer(const Player* player);
+    bool IsAlive() const { return _alive; }
+    void Deactivate();
+    void Activate(Vector2 pos);
 private:
     Transform2D _transform;
     Sprite _sprite;
@@ -20,6 +23,8 @@ private:
     float _retargetTimer = 0.0f;
     float _retargetMin = 1.0f;
     float _retargetMax = 2.0f;
+
+    bool _alive = true;
 
     void Retarget();
 };
