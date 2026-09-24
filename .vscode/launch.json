@@ -16,7 +16,8 @@
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
-            "preLaunchTask": "Build"
+            "preLaunchTask": "Build",
+            "console": "internalConsole"
         }
     ]
 }

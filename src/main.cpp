@@ -7,8 +7,9 @@
 #include "ResourceKeys.hpp"
 #include "GameInput.hpp"
 #include "CollisionMap.hpp"
-#include "Bullet.hpp"
+#include "BulletManager.hpp"
 #include "Player.hpp"
+
 
 int main()
 {
@@ -26,6 +27,8 @@ int main()
     RM::get().Load();
            
     const Texture2D& background = RM::get().GetTexture(RK::GAME_BG);
+    GameConfig::MAP_H = (float)background.height;
+    GameConfig::MAP_W = (float)background.width;
     
     CollisionMap collisionMap;
     collisionMap.Init(RK::GAME_BG_COLLISION);
@@ -33,14 +36,11 @@ int main()
     RenderTexture2D canvas = LoadRenderTexture(GameConfig::BASE_W, GameConfig::BASE_H);
     SetTextureFilter(canvas.texture, TEXTURE_FILTER_BILINEAR);
 
-    float mapW = (float)background.width;
-    float mapH = (float)background.height;
-
     float halfW = GameConfig::BASE_W * 0.5f;
     float halfH = GameConfig::BASE_H * 0.5f;
 
     Player player(RK::PLAYER);
-    player.SetPosition({mapW * 0.5f, mapH * 0.5f});
+    player.SetPosition({GameConfig::MAP_W * 0.5f, GameConfig::MAP_H * 0.5f});
     player.SetCollisionMap(&collisionMap);
 
     Camera2D camera = {};
@@ -50,7 +50,7 @@ int main()
 
     Rectangle src, dst;
 
-    std::vector<Bullet> bullets;
+    BulletManager bullets;
 
     while (!WindowShouldClose())
     {
@@ -62,27 +62,23 @@ int main()
         dt = GetFrameTime();
 
         if (GI::get().State().shoot)
-        {
-            bullets.emplace_back(
-                player.GetFiringPosition(), 
-                GI::get().State().aimAngle,
-                600.0f);
-        }
+            bullets.Spawn(player.GetFiringPosition(), GI::get().State().aimAngle);
 
         player.Update(dt);
-        for (auto& b : bullets) b.Update(dt);
+        bullets.Update(dt);
+
 
         camera.target = player.GetPosition();
         
-        camera.target.x = std::clamp(camera.target.x, halfW, mapW - halfW);
-        camera.target.y = std::clamp(camera.target.y, halfH, mapH - halfH);
+        camera.target.x = std::clamp(camera.target.x, halfW, GameConfig::MAP_W - halfW);
+        camera.target.y = std::clamp(camera.target.y, halfH, GameConfig::MAP_H - halfH);
         
         BeginTextureMode(canvas);
             ClearBackground(BLACK);
             BeginMode2D(camera);
                 DrawTexture(background, 0, 0, WHITE);
                 player.Draw();
-                for (auto& b : bullets) b.Draw();
+                bullets.Draw();
                 DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
             EndMode2D();
 
@@ -91,7 +87,7 @@ int main()
             DrawText(TextFormat("Player: %.0f,%.0f", player.GetPosition().x, player.GetPosition().y), 12, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Camera: %.0f,%.0f", camera.target.x, camera.target.y), 256, GameConfig::BASE_H - 24, 20, LIME);
             DrawText(TextFormat("Aim: %.1f", GI::get().State().aimAngle), 512, GameConfig::BASE_H - 24, 20, LIME);
-            DrawText(TextFormat("Bullets: %d", (int)bullets.size()), 700, GameConfig::BASE_H - 24, 20, LIME);
+            DrawText(TextFormat("Bullets: %d/%d", bullets.CountAlive(), bullets.GetPoolTotal()), 700, GameConfig::BASE_H - 24, 20, LIME);
 
         EndTextureMode();
 
