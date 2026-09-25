@@ -23,12 +23,13 @@ private:
     void drawWorld();
     void drawHUD();
     void drawGameOverOverlay();
+    void drawGetReadyOverlay();
     void updateEntities(float delta);
     void updateCamera();
     void updateShooting();
     void startWave(int wave);
     void restart();
-    void updateWaves();
+    void updateWaves(float delta);
     void updateCollisions();
 
     Player _player;
@@ -38,5 +39,8 @@ private:
     EnemyManager _enemies;
     GameState _gameState = GameState::Playing;
     Minimap _minimap;
-    int _wave = 1;
+    int _wave = 0;
+    float _waveTime = 0.0f;
+    bool _waveRunning = false;
+    float _pauseTimer = 0.0f;
 };

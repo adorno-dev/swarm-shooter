@@ -24,8 +24,6 @@ Game::Game() : _player(RK::PLAYER)
     _camera.target = GameConfig::MapCenter();
 
     _enemies.Init(&_player);
-
-    startWave(_wave);
 }
 
 Game::~Game() {}
@@ -56,7 +54,7 @@ void Game::Update(float delta)
     updateEntities(delta);
     updateShooting();
     updateCollisions();
-    updateWaves();
+    updateWaves(delta);
     updateCamera();
 
     if (_player.IsDead()) _gameState = GameState::GameOver;
@@ -69,6 +67,7 @@ void Game::Draw(RenderTexture2D& canvas)
     drawWorld();
     drawHUD();
     _minimap.Draw();
+    if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
     if (_gameState == GameState::GameOver) drawGameOverOverlay();
     EndTextureMode();
 }
@@ -76,16 +75,39 @@ void Game::Draw(RenderTexture2D& canvas)
 void Game::startWave(int wave)
 {
     _wave = wave;
-
+    _waveTime = GameConfig::WAVE_TIME_LIMIT;
+    _waveRunning = true;
+    _pauseTimer = 0.0f;
     _enemies.SpawnBatch(
         GameConfig::WAVE_ENEMY_BASE + 
         GameConfig::WAVE_ENEMY_RAMP * wave);
 }
 
-void Game::updateWaves()
+void Game::updateWaves(float delta)
 {
-    if (_enemies.IsBatchComplete())
-        startWave(_wave + 1);
+    if (_waveRunning)
+    {
+        _waveTime -= delta;
+        if (_waveTime < 0.0f)
+        {
+            _gameState = GameState::GameOver;
+            _waveTime = 0.0f;
+            return;
+        }
+
+        if (_enemies.IsBatchComplete())
+        {
+            _waveRunning = false;
+            _pauseTimer = 0.0f;
+        }
+    }
+    else
+    {
+        _pauseTimer += delta;
+
+        if (_pauseTimer >= GameConfig::WAVE_PAUSE)
+            startWave(_wave + 1);
+    }
 }
 
 void Game::updateShooting()
@@ -183,8 +205,9 @@ void Game::drawHUD()
 
     DrawText(
         TextFormat(
-            "WV: %d  HP: %d/%d  Bullets: %d/%d  Enemies: %d/%d", 
+            "WV: %d  WT: %.1fs  HP: %d/%d  Bullets: %d/%d  Enemies: %d/%d", 
             _wave,
+            _waveTime,
             _player.GetHealth(),
             _player.GetMaxHealth(),
             _bullets.CountAlive(),
@@ -213,6 +236,23 @@ void Game::drawGameOverOverlay()
          GameConfig::BASE_H / 2 + 12, 32, RAYWHITE);
 }
 
+void Game::drawGetReadyOverlay()
+{
+    const char* title = "Wave";
+    int titleW = MeasureText(title, 60);
+
+    DrawText(title, 
+        (GameConfig::BASE_W - titleW) / 2,
+         GameConfig::BASE_H / 4 - 60, 60, RAYWHITE);
+
+    const char* prompt = "Get ready...";
+    int promptW = MeasureText(prompt, 32);
+
+    DrawText(prompt, 
+        (GameConfig::BASE_W - promptW) / 2,
+         GameConfig::BASE_H / 4 + 12, 32, GRAY);
+}
+
 void Game::restart()
 {
     _player.Reset();
@@ -220,5 +260,7 @@ void Game::restart()
     _bullets.DeactivateAll();
     _enemies.DeactivateAll();
     _gameState = GameState::Playing;
-    startWave(1);
+    _waveRunning = false;
+    _wave = 0;
+    _pauseTimer = 0.0f;
 }

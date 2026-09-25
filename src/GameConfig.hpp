@@ -45,6 +45,8 @@ namespace GameConfig {
     // Waves
     constexpr int WAVE_ENEMY_BASE = 8;
     constexpr int WAVE_ENEMY_RAMP = 4;
+    constexpr float WAVE_TIME_LIMIT = 45.0f;
+    constexpr float WAVE_PAUSE = 2.0f;
 
     // Minimap
     constexpr int MINIMAP_SIZE = 150;
