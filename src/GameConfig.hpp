@@ -40,6 +40,11 @@ namespace GameConfig {
     constexpr Vector2 PLAYER_PIVOT = { 0.31f, 0.58f };
     constexpr Vector2 PLAYER_MUZZLE_OFFSET = { 54.0f, 8.0f };
 
+    // Health Potion
+    constexpr int HEALTH_DROP_CHANCE = 50;
+    constexpr float HEALTH_POTION_LIFETIME = 5.0f;
+
+
     // Collision
     constexpr unsigned char WALKABLE_THRESHOLD = 240;
 

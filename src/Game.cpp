@@ -30,10 +30,6 @@ Game::Game() : _player(RK::PLAYER)
     _camera.target = GameConfig::MapCenter();
 
     _enemies.Init(&_player);
-
-    _healthPotions.Spawn({ 400.0f, 400.0f });
-    _healthPotions.Spawn({ 650.0f, 400.0f });
-    _healthPotions.Spawn({ 900.0f, 400.0f });
 }
 
 Game::~Game() {}
@@ -89,6 +85,7 @@ void Game::startWave(int wave)
     _waveTime = GameConfig::WAVE_TIME_LIMIT;
     _waveRunning = true;
     _pauseTimer = 0.0f;
+    _healthPotions.DeactivateAll();
     _enemies.SpawnBatch(
         GameConfig::WAVE_ENEMY_BASE + 
         GameConfig::WAVE_ENEMY_RAMP * wave);
@@ -166,6 +163,8 @@ void Game::updateCollisions()
             {
                 bullet->Deactivate();
                 enemy->Kill();
+                if (GetRandomValue(0, 100) <= GameConfig::HEALTH_DROP_CHANCE)
+                    _healthPotions.Spawn(enemy->GetPosition());
                 break;
             }
         }
@@ -177,6 +176,17 @@ void Game::updateCollisions()
 
         if (_player.GetCollider().IsCollidingWith(enemy->GetCollider()))
             _player.Hit();
+    }
+
+    for (auto& healthPotion : _healthPotions.GetPool())
+    {
+        if (!healthPotion->IsAlive()) continue;
+
+        if (_player.GetCollider().IsCollidingWith(healthPotion->GetCollider()))
+        {
+            _player.Heal(1);
+            healthPotion->Deactivate();
+        }
     }
 }
 

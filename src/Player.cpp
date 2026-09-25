@@ -6,6 +6,8 @@
 #include "GameConfig.hpp"
 #include "GameInput.hpp"
 
+#include <algorithm>
+
 
 Player::Player(const std::string& textureName)
 {
@@ -57,6 +59,13 @@ void Player::Hit()
     _invTimer = _invTime;
 
     TraceLog(LOG_INFO, "Player hit! health: %d/%d", _health, _maxHealth);
+}
+
+void Player::Heal(int amount)
+{
+    if (_health <= 0) return;
+
+    _health = std::min(_health + amount, _maxHealth);
 }
 
 Vector2 Player::GetFiringPosition() const

@@ -34,18 +34,25 @@ void HUD::Draw(int wave, float waveTime, bool waveRunning) const
 {
     DrawRectangle(0, 0, GameConfig::BASE_W, BAR_HEIGHT, ColorAlpha(DARKBLUE, 0.8f));
 
+    Color waveColor = WHITE;
+
     int fontSize = 24;
 
     const char* waveText = nullptr;
 
-    if (waveRunning) waveText = TextFormat("Wave %d %0.1fs", wave, waveTime);
+    if (waveRunning)
+    {
+        waveColor = waveTime < 8.0f ? RED : WHITE;
+        
+        waveText = TextFormat("Wave %d %0.1fs", wave, waveTime);
+    }
     else if (wave > 0) waveText = TextFormat("Wave %d Completed!", wave);
 
     if (waveText)
     {
         int textW = MeasureText(waveText, fontSize);
 
-        DrawText(waveText, GameConfig::HALF_BASE_W - textW / 2, 18, fontSize, WHITE);
+        DrawText(waveText, GameConfig::HALF_BASE_W - textW / 2, 18, fontSize, waveColor);
     }
 
     for (int i = 0; i < _player->GetHealth(); i++)

@@ -18,6 +18,7 @@ void HealthPotion::Activate(Vector2 pos)
 {
     _alive = true;
     _transform.position = pos;
+    _lifeTime = GameConfig::HEALTH_POTION_LIFETIME;
 }
 
 void HealthPotion::Deactivate()
@@ -26,9 +27,13 @@ void HealthPotion::Deactivate()
     _transform.position = GameConfig::OFFSCREEN_POSITION;
 }
 
-void HealthPotion::Update(float /* delta */)
+void HealthPotion::Update(float delta )
 {
+    if (!_alive) return;
 
+    _lifeTime -= delta;
+
+    if (_lifeTime < 0.0f) Deactivate();
 }
 
 void HealthPotion::Draw()
