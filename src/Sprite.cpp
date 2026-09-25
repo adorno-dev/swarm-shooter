@@ -1,7 +1,6 @@
 #include "Sprite.hpp"
 #include "ResourceManager.hpp"
-
-bool Sprite::showDebug = false;
+#include "GameConfig.hpp"
 
 void Sprite::Init(const std::string& textureName)
 {
@@ -85,6 +84,6 @@ void Sprite::Draw(const Transform2D& transform) const
 
     DrawTexturePro(*texture, src, dst, origin, transform.rotation + rotationOffset, WHITE);
 
-    if (showDebug)
+    if (GameConfig::SHOW_DEBUG)
         DrawCircle((int)transform.position.x, (int)transform.position.y, 2.0f, RED);
 }

@@ -59,16 +59,13 @@ int main()
     while (!WindowShouldClose())
     {
         if (IsKeyPressed(KEY_F1))
-            Sprite::showDebug = !Sprite::showDebug;
+            GameConfig::SHOW_DEBUG = !GameConfig::SHOW_DEBUG;
 
         if (IsKeyPressed(KEY_L))
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 12; i++)
                 enemies.Spawn({ 
                     RandomFloat(0.0f, GameConfig::MAP_W), 
                     RandomFloat(0.0f, GameConfig::MAP_H)});
-
-        if (IsKeyPressed(KEY_K))
-            enemies.DeactivateAll();
 
         GI::get().Update();
 
@@ -80,6 +77,24 @@ int main()
         player.Update(dt);
         bullets.Update(dt);
         enemies.Update(dt);
+
+        for (auto& bullet : bullets.GetPool())
+        {
+            if (!bullet->IsAlive()) continue;
+
+            for (auto& enemy : enemies.GetPool())
+            {
+                if (!enemy->IsAlive()) continue;
+
+                if (bullet->GetCollider().IsCollidingWith(enemy->GetCollider()))
+                {
+                    TraceLog(LOG_INFO, "HIT! Bullet hit enemy");
+                    bullet->Deactivate();
+                    enemy->Deactivate();
+                    break;
+                }
+            }
+        }
 
         camera.target = player.GetPosition();
         camera.target.x = std::clamp(camera.target.x, halfW, GameConfig::MAP_W - halfW);
