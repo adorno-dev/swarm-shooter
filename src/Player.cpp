@@ -16,6 +16,12 @@ Player::Player(const std::string& textureName)
     _invTime = GameConfig::PLAYER_INV_TIME;
 }
 
+void Player::Reset()
+{
+    _health = _maxHealth;
+    _invTimer = 0.0f;
+}
+
 void Player::Update(float delta)
 {
     _movement.Update(_transform, GI::get().State(), delta, _collisionMap);

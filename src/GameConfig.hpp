@@ -33,4 +33,8 @@ namespace GameConfig {
 
     // Collision
     constexpr unsigned char WALKABLE_THRESHOLD = 240;
+
+    // Waves
+    constexpr int WAVE_ENEMY_BASE = 8;
+    constexpr int WAVE_ENEMY_RAMP = 4;
 }

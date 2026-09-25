@@ -12,6 +12,7 @@ public:
 
     const std::vector<std::unique_ptr<Bullet>>& GetPool() const { return _pool; }
 
+    void DeactivateAll();
     int GetPoolTotal() const { return (int)_pool.size(); }
     int CountAlive() const
     {

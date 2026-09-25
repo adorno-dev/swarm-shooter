@@ -18,6 +18,11 @@ void BulletManager::Spawn(Vector2 pos, float angleDeg)
     TraceLog(LOG_INFO, "BULLET_MGR: Pool growing (size: %d)", (int)_pool.size());
 }
 
+void BulletManager::DeactivateAll()
+{
+    for (const auto& b : _pool) b->Deactivate();
+}
+
 void BulletManager::Update(float dt)
 {
     for (const auto& b : _pool) b->Update(dt);

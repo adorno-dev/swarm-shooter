@@ -16,9 +16,11 @@ public:
     void Draw() const;
     void Update(float delta);
 
+    void Reset();
     void Hit();
-    int GetHealth() const { return _health; };
-    int GetMaxHealth() const { return _maxHealth; };
+    int GetHealth() const { return _health; }
+    int GetMaxHealth() const { return _maxHealth; }
+    bool IsDead() const { return _health <= 0; }
 
     Vector2 GetPosition() const;
     Vector2 GetFiringPosition() const;
