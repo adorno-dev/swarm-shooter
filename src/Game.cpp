@@ -17,6 +17,8 @@ Game::Game() : _player(RK::PLAYER)
     GameConfig::MAP_H = (float)background.height;
 
     _minimap.Init(_player, _enemies);
+    _debugOverlay.Init(_player, _bullets, _enemies, _camera);
+    _hud.Init(_player);
 
     _collisionMap.Init(RK::GAME_BG_COLLISION);
 
@@ -73,8 +75,9 @@ void Game::Draw(RenderTexture2D& canvas)
     BeginTextureMode(canvas);
     ClearBackground(BLACK);
     drawWorld();
-    drawHUD();
+    _hud.Draw(_wave, _waveTime, _waveRunning);
     _minimap.Draw();
+    _debugOverlay.Draw();
     if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
     if (_gameState == GameState::GameOver) drawGameOverOverlay();
     EndTextureMode();
@@ -187,44 +190,6 @@ void Game::drawWorld()
     _healthPotions.Draw();
     DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
     EndMode2D();
-}
-
-void Game::drawHUD()
-{
-    DrawRectangle(0, GameConfig::BASE_H - 32, GameConfig::BASE_W, 32, ColorAlpha(DARKBLUE, 0.6f));
-
-    DrawText(
-        TextFormat(
-            "Player: %.0f,%.0f", 
-            _player.GetPosition().x, 
-            _player.GetPosition().y), 
-        12, GameConfig::BASE_H - 24, 20, LIME);
-
-    DrawText(
-        TextFormat(
-            "Camera: %.0f,%.0f", 
-            _camera.target.x, 
-            _camera.target.y), 
-        256, GameConfig::BASE_H - 24, 20, LIME);
-
-    DrawText(
-        TextFormat(
-            "Aim: %.1f", 
-            GI::get().State().aimAngle), 
-        512, GameConfig::BASE_H - 24, 20, LIME);
-
-    DrawText(
-        TextFormat(
-            "WV: %d  WT: %.1fs  HP: %d/%d  Bullets: %d/%d  Enemies: %d/%d", 
-            _wave,
-            _waveTime,
-            _player.GetHealth(),
-            _player.GetMaxHealth(),
-            _bullets.CountAlive(),
-            _bullets.GetPoolTotal(),
-            _enemies.CountAlive(),
-            _enemies.GetPoolTotal()), 
-        700, GameConfig::BASE_H - 24, 20, LIME);
 }
 
 void Game::drawGameOverOverlay()

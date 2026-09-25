@@ -6,6 +6,8 @@
 #include "Player.hpp"
 #include "CollisionMap.hpp"
 #include "Minimap.hpp"
+#include "DebugOverlay.hpp"
+#include "HUD.hpp"
 #include "HealthPotionManager.hpp"
 
 
@@ -23,7 +25,6 @@ public:
 
 private:
     void drawWorld();
-    void drawHUD();
     void drawGameOverOverlay();
     void drawGetReadyOverlay();
     void updateEntities(float delta);
@@ -42,6 +43,9 @@ private:
     HealthPotionManager _healthPotions;
     GameState _gameState = GameState::Playing;
     Minimap _minimap;
+    DebugOverlay _debugOverlay;
+    HUD _hud;
+
     int _wave = 0;
     float _waveTime = 0.0f;
     bool _waveRunning = false;
