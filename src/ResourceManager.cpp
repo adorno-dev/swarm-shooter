@@ -1,6 +1,11 @@
 #include "ResourceManager.hpp"
+
+#include "raylib.h"
+
 #include "ResourceKeys.hpp"
+
 #include <stdexcept>
+
 
 void ResourceManager::Unload()
 {
@@ -27,6 +32,7 @@ void ResourceManager::Load()
     loadTexture(RK::BULLET, "bullet.png");
     loadTexture(RK::COCKROACH_MOVE, "cockroach-move.png");
     loadTexture(RK::COCKROACH_DEATH, "cockroach-death.png");
+    loadTexture(RK::HEALTH_POTION, "healthPotion.png");
 
     loadImage(RK::GAME_BG_COLLISION, "gameBgCollision.png");
 

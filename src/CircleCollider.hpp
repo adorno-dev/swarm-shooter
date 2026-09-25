@@ -1,6 +1,9 @@
 #pragma once
+
 #include "raylib.h"
+
 #include "Transform2D.hpp"
+
 
 struct CircleCollider
 {

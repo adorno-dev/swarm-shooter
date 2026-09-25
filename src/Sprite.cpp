@@ -1,6 +1,10 @@
 #include "Sprite.hpp"
+
+#include "raylib.h"
+
 #include "ResourceManager.hpp"
 #include "GameConfig.hpp"
+
 
 void Sprite::Init(const std::string& textureName)
 {

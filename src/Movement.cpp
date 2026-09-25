@@ -1,5 +1,9 @@
 #include "Movement.hpp"
+
+#include "Transform2D.hpp"
+#include "MovementState.hpp"
 #include "CollisionMap.hpp"
+
 
 void Movement::Update(Transform2D& transform, const MovementState& movementState, float delta,
                             const CollisionMap* collisionMap)

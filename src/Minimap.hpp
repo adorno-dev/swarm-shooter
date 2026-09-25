@@ -1,4 +1,6 @@
 #pragma once
+#include "raylib.h"
+
 
 class Player;
 class EnemyManager;

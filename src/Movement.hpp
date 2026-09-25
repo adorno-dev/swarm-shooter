@@ -1,7 +1,9 @@
 #pragma once
 #include "raylib.h"
+
 #include "Transform2D.hpp"
 #include "MovementState.hpp"
+
 
 class CollisionMap;
 

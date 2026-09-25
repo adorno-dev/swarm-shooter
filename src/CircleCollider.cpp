@@ -1,6 +1,10 @@
-#include "GameConfig.hpp"
 #include "CircleCollider.hpp"
+
+#include "raylib.h"
 #include "raymath.h"
+
+#include "GameConfig.hpp"
+
 
 void CircleCollider::DrawDebug() const
 {

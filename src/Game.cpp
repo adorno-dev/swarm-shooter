@@ -1,9 +1,13 @@
-#include <algorithm>
 #include "Game.hpp"
+
+#include "raylib.h"
+
 #include "GameInput.hpp"
 #include "GameConfig.hpp"
 #include "ResourceKeys.hpp"
 #include "ResourceManager.hpp"
+
+#include <algorithm>
 
 
 Game::Game() : _player(RK::PLAYER)
@@ -24,6 +28,10 @@ Game::Game() : _player(RK::PLAYER)
     _camera.target = GameConfig::MapCenter();
 
     _enemies.Init(&_player);
+
+    _healthPotions.Spawn({ 400.0f, 400.0f });
+    _healthPotions.Spawn({ 650.0f, 400.0f });
+    _healthPotions.Spawn({ 900.0f, 400.0f });
 }
 
 Game::~Game() {}
@@ -123,6 +131,7 @@ void Game::updateEntities(float delta)
     _player.Update(delta);
     _bullets.Update(delta);
     _enemies.Update(delta);
+    _healthPotions.Update(delta);
 }
 
 void Game::updateCamera()
@@ -175,6 +184,7 @@ void Game::drawWorld()
     _player.Draw();
     _bullets.Draw();
     _enemies.Draw();
+    _healthPotions.Draw();
     DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
     EndMode2D();
 }
@@ -259,6 +269,7 @@ void Game::restart()
     _player.SetPosition(GameConfig::MapCenter());
     _bullets.DeactivateAll();
     _enemies.DeactivateAll();
+    _healthPotions.DeactivateAll();
     _gameState = GameState::Playing;
     _waveRunning = false;
     _wave = 0;

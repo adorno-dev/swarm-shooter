@@ -1,10 +1,14 @@
 #include "Bullet.hpp"
-#include "ResourceKeys.hpp"
+
 #include "raylib.h"
 #include "raymath.h"
-#include <cmath>
+
+#include "ResourceKeys.hpp"
 #include "GameConfig.hpp"
 #include "SwarmUtils.hpp"
+
+#include <cmath>
+
 
 Bullet::Bullet()
 {
@@ -13,12 +17,12 @@ Bullet::Bullet()
     _collider.Init(6.0f, _transform);
 }
 
-void Bullet::Activate(Vector2 pos, float angleDeg, float speed)
+void Bullet::Activate(Vector2 pos, float angleDeg)
 {
     _alive = true;
     _transform.position = pos;
     _transform.rotation = angleDeg;
-    _velocity = Direction(angleDeg) * speed;
+    _velocity = Direction(angleDeg) * _speed;
     _sprite.Reset();
 }
 

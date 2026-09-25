@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 
+
 namespace GameConfig {
     
     inline bool SHOW_DEBUG = true;

@@ -1,7 +1,12 @@
 #include "Enemy.hpp"
+
+#include "raylib.h"
+
 #include "ResourceKeys.hpp"
 #include "Player.hpp"
 #include "GameConfig.hpp"
+#include "SwarmUtils.hpp"
+
 
 Enemy::Enemy()
 {
@@ -30,22 +35,22 @@ void Enemy::Retarget()
     _retargetTimer = RandomFloat(_retargetMin, _retargetMax);
 }
 
-void Enemy::Update(float dt)
+void Enemy::Update(float delta)
 {
     if (!_alive) return;
 
     switch (_state)
     {
         case EnemyState::Moving:
-            _retargetTimer -= dt;
+            _retargetTimer -= delta;
             if (_retargetTimer < 0.0f)
                 Retarget();
 
-            _transform.MoveForward(_speed * dt);
-            _spriteMove.Update(dt);
+            _transform.MoveForward(_speed * delta);
+            _spriteMove.Update(delta);
             break;
         case EnemyState::Dying:
-            _spriteDeath.Update(dt);
+            _spriteDeath.Update(delta);
             if (_spriteDeath.finished)
                 Deactivate();
         default:

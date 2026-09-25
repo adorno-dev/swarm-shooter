@@ -1,8 +1,10 @@
-#include <algorithm>
 #include "raylib.h"
+
 #include "GameConfig.hpp"
 #include "ResourceManager.hpp"
 #include "Game.hpp"
+
+#include <algorithm>
 
 
 int main()

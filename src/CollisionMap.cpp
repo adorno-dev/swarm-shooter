@@ -1,6 +1,10 @@
 #include "CollisionMap.hpp"
+
+#include "raylib.h"
+
 #include "ResourceManager.hpp"
 #include "GameConfig.hpp"
+
 
 void CollisionMap::Init(const std::string& name)
 {

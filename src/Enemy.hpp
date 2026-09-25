@@ -1,7 +1,11 @@
 #pragma once
+#include "raylib.h"
+
+#include "PoolObject.hpp"
 #include "Transform2D.hpp"
 #include "Sprite.hpp"
 #include "CircleCollider.hpp"
+
 
 class Player;
 
@@ -11,20 +15,22 @@ enum class EnemyState
     Dying
 };
 
-class Enemy
+class Enemy : public PoolObject
 {
 public:
     Enemy();
-    void Update(float dt);
-    void Draw();
+
+    void Update(float delta) override;
+    void Draw() override;
+    void Deactivate() override;
+
+    void Activate(Vector2 pos);
+    void Kill();
+    bool CanBeHit() const { return _state == EnemyState::Moving; }
+
     void SetPosition(Vector2 position);
     void SetPlayer(const Player* player);
     Vector2 GetPosition() const { return _transform.position; }
-    bool IsAlive() const { return _alive; }
-    void Kill();
-    bool CanBeHit() const { return _state == EnemyState::Moving; }
-    void Deactivate();
-    void Activate(Vector2 pos);
     const CircleCollider& GetCollider() const { return _collider; }
     
 private:
@@ -40,8 +46,6 @@ private:
     float _retargetTimer = 0.0f;
     float _retargetMin = 1.0f;
     float _retargetMax = 2.0f;
-
-    bool _alive = true;
 
     void Retarget();
 };

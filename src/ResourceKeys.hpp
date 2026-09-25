@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace RK
 {
     constexpr const char* GAME_BG = "gameBg";
@@ -8,6 +9,7 @@ namespace RK
     constexpr const char* BULLET = "bullet";
     constexpr const char* COCKROACH_MOVE = "cockroach-move";
     constexpr const char* COCKROACH_DEATH = "cockroach-death";
+    constexpr const char* HEALTH_POTION = "healthPotion";
 
     constexpr const char* GAME_BG_COLLISION = "gameBgCollision";
     

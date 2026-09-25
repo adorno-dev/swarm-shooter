@@ -1,7 +1,9 @@
+#include "Minimap.hpp"
+
 #include "raylib.h"
+
 #include "EnemyManager.hpp"
 #include "Player.hpp"
-#include "Minimap.hpp"
 #include "GameConfig.hpp"
 
 

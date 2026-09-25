@@ -1,6 +1,11 @@
-#include "GameConfig.hpp"
 #include "GameInput.hpp"
+
+
+#include "raylib.h"
 #include "raymath.h"
+
+#include "GameConfig.hpp"
+
 
 void GameInput::Update()
 {

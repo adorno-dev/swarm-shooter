@@ -1,6 +1,8 @@
 #include "EnemyManager.hpp"
+
 #include "raylib.h"
 #include "raymath.h"
+
 #include "GameConfig.hpp"
 #include "SwarmUtils.hpp"
 #include "Player.hpp"
@@ -39,31 +41,21 @@ void EnemyManager::SpawnBatch(int count)
 
 void EnemyManager::Spawn(Vector2 pos)
 {
-    for (auto& enemy : _pool)
-    {
-        if (!enemy->IsAlive())
-        {
-            enemy->Activate(pos);
-            return;
-        }
-    }
-
-    auto enemy = std::make_unique<Enemy>();
+    auto* enemy = spawnInPool();
     enemy->Activate(pos);
     enemy->SetPlayer(_player);
-    _pool.push_back(std::move(enemy));
 
     TraceLog(LOG_INFO, "ENEMY_MGR: Pool growing (size: %d)", (int)_pool.size());
 }
 
-void EnemyManager::Update(float dt)
+void EnemyManager::Update(float delta)
 {
     if (_batchRemaining > 0)
     {
         // Spawn(pickSpawnPoint());
         // _batchRemaining--;
 
-        _staggerTimer -= dt;
+        _staggerTimer -= delta;
         if (_staggerTimer < 0.0f)
         {
             _staggerTimer = _staggerInterval;
@@ -73,18 +65,5 @@ void EnemyManager::Update(float dt)
         }
     }
 
-    for (auto& enemy : _pool)
-        enemy->Update(dt);
-}
-
-void EnemyManager::Draw()
-{
-    for (auto& enemy : _pool)
-        enemy->Draw();
-}
-
-void EnemyManager::DeactivateAll()
-{
-    for (auto& enemy : _pool)
-        enemy->Deactivate();
+    PoolObjectManager<Enemy>::Update(delta);
 }

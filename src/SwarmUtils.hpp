@@ -1,6 +1,9 @@
 #pragma once
 #include "raylib.h"
+#include "raymath.h"
+
 #include <cmath>
+
 
 inline Vector2 Direction(float angleDeg)
 {

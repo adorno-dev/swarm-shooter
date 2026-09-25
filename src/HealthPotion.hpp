@@ -7,24 +7,22 @@
 #include "CircleCollider.hpp"
 
 
-class Bullet : public PoolObject
+class HealthPotion : public PoolObject
 {
 public:
-    Bullet();
+    HealthPotion();
 
     void Update(float delta) override;
     void Draw() override;
     void Deactivate() override;
 
-    void Activate(Vector2 pos, float angleDeg);
+    void Activate(Vector2 pos);
 
     Vector2 GetPosition() const { return _transform.position; }
     const CircleCollider& GetCollider() const { return _collider; }
-    
+
 private:
     Transform2D _transform;
     Sprite _sprite;
     CircleCollider _collider;
-    Vector2 _velocity = { 0.0f, 0.0f };
-    float _speed = 600.0f;
 };

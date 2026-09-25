@@ -1,10 +1,12 @@
 #pragma once
 #include "raylib.h"
+
 #include "BulletManager.hpp"
 #include "EnemyManager.hpp"
 #include "Player.hpp"
 #include "CollisionMap.hpp"
 #include "Minimap.hpp"
+#include "HealthPotionManager.hpp"
 
 
 enum class GameState { Playing, GameOver };
@@ -37,6 +39,7 @@ private:
     Camera2D _camera = {};
     BulletManager _bullets;
     EnemyManager _enemies;
+    HealthPotionManager _healthPotions;
     GameState _gameState = GameState::Playing;
     Minimap _minimap;
     int _wave = 0;

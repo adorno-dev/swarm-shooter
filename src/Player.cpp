@@ -1,7 +1,11 @@
 #include "Player.hpp"
+
+#include "raylib.h"
+#include "raymath.h"
+
 #include "GameConfig.hpp"
 #include "GameInput.hpp"
-#include "raymath.h"
+
 
 Player::Player(const std::string& textureName)
 {
