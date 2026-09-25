@@ -12,6 +12,8 @@ Game::Game() : _player(RK::PLAYER)
     GameConfig::MAP_W = (float)background.width;
     GameConfig::MAP_H = (float)background.height;
 
+    _minimap.Init(_player, _enemies);
+
     _collisionMap.Init(RK::GAME_BG_COLLISION);
 
     _player.SetPosition(GameConfig::MapCenter());
@@ -66,6 +68,7 @@ void Game::Draw(RenderTexture2D& canvas)
     ClearBackground(BLACK);
     drawWorld();
     drawHUD();
+    _minimap.Draw();
     if (_gameState == GameState::GameOver) drawGameOverOverlay();
     EndTextureMode();
 }

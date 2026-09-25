@@ -4,6 +4,7 @@
 #include "EnemyManager.hpp"
 #include "Player.hpp"
 #include "CollisionMap.hpp"
+#include "Minimap.hpp"
 
 
 enum class GameState { Playing, GameOver };
@@ -36,5 +37,6 @@ private:
     BulletManager _bullets;
     EnemyManager _enemies;
     GameState _gameState = GameState::Playing;
+    Minimap _minimap;
     int _wave = 1;
 };

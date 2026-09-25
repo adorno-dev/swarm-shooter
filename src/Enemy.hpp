@@ -19,12 +19,14 @@ public:
     void Draw();
     void SetPosition(Vector2 position);
     void SetPlayer(const Player* player);
+    Vector2 GetPosition() const { return _transform.position; }
     bool IsAlive() const { return _alive; }
     void Kill();
     bool CanBeHit() const { return _state == EnemyState::Moving; }
     void Deactivate();
     void Activate(Vector2 pos);
     const CircleCollider& GetCollider() const { return _collider; }
+    
 private:
     Transform2D _transform;
     Sprite _spriteMove;
