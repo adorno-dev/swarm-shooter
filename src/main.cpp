@@ -14,18 +14,19 @@
 
 int main()
 {
-    float scale;
-    float offsetX;
-    float offsetY;
-
-    float dt;
-
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(GameConfig::BASE_W, GameConfig::BASE_H, "Swarm");
     SetTargetFPS(60);
     DisableCursor();
+    SetExitKey(KEY_NULL);
 
     RM::get().Load();
+
+    // #pragma region +Monitor Settings
+    // Vector2 pos = GetMonitorPosition(1);
+    // SetWindowPosition(pos.x + 320, pos.y + 180);
+    // SetWindowSize(1920, 1080);
+    // #pragma endregion
            
     const Texture2D& background = RM::get().GetTexture(RK::GAME_BG);
     GameConfig::MAP_H = (float)background.height;
@@ -49,7 +50,7 @@ int main()
     camera.target = player.GetPosition();
     camera.offset = { halfW, halfH };
 
-    Rectangle src, dst;
+    // Rectangle src, dst;
     BulletManager bullets;
 
     EnemyManager enemies;
@@ -58,6 +59,14 @@ int main()
 
     while (!WindowShouldClose())
     {
+        if (IsKeyPressed(KEY_Q))
+            break;
+        
+        if (IsKeyPressed(KEY_ESCAPE))
+            IsCursorHidden()
+                ? EnableCursor()
+                : DisableCursor();
+
         if (IsKeyPressed(KEY_F1))
             GameConfig::SHOW_DEBUG = !GameConfig::SHOW_DEBUG;
 
@@ -69,7 +78,7 @@ int main()
 
         GI::get().Update();
 
-        dt = GetFrameTime();
+        float dt = GetFrameTime();
 
         if (GI::get().State().shoot)
             bullets.Spawn(player.GetFiringPosition(), GI::get().State().aimAngle);
@@ -84,13 +93,13 @@ int main()
 
             for (auto& enemy : enemies.GetPool())
             {
-                if (!enemy->IsAlive()) continue;
+                if (!enemy->IsAlive() || !enemy->CanBeHit()) continue;
 
                 if (bullet->GetCollider().IsCollidingWith(enemy->GetCollider()))
                 {
                     TraceLog(LOG_INFO, "HIT! Bullet hit enemy");
                     bullet->Deactivate();
-                    enemy->Deactivate();
+                    enemy->Kill();
                     break;
                 }
             }
@@ -124,16 +133,16 @@ int main()
 
         EndTextureMode();
 
-        scale = std::min(
+        float scale = std::min(
             (float)GetScreenWidth() / GameConfig::BASE_W,
             (float)GetScreenHeight() / GameConfig::BASE_H
         );
 
-        offsetX = (GetScreenWidth() - GameConfig::BASE_W * scale) * 0.5f;
-        offsetY = (GetScreenHeight() - GameConfig::BASE_H * scale) * 0.5f;
+        float offsetX = (GetScreenWidth() - GameConfig::BASE_W * scale) * 0.5f;
+        float offsetY = (GetScreenHeight() - GameConfig::BASE_H * scale) * 0.5f;
 
-        src = { 0, 0, (float)GameConfig::BASE_W, -(float)GameConfig::BASE_H };
-        dst = { offsetX, offsetY, GameConfig::BASE_W * scale, GameConfig::BASE_H * scale };
+        Rectangle src = { 0, 0, (float)GameConfig::BASE_W, -(float)GameConfig::BASE_H };
+        Rectangle dst = { offsetX, offsetY, GameConfig::BASE_W * scale, GameConfig::BASE_H * scale };
 
         BeginDrawing();
             ClearBackground(BLACK);

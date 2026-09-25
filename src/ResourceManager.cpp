@@ -26,6 +26,7 @@ void ResourceManager::Load()
     loadTexture(RK::GAME_FG, "Walls.png");
     loadTexture(RK::BULLET, "bullet.png");
     loadTexture(RK::COCKROACH_MOVE, "cockroach-move.png");
+    loadTexture(RK::COCKROACH_DEATH, "cockroach-death.png");
 
     loadImage(RK::GAME_BG_COLLISION, "gameBgCollision.png");
 

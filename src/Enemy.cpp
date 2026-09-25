@@ -5,11 +5,23 @@
 
 Enemy::Enemy()
 {
-    _sprite.Init(RK::COCKROACH_MOVE, 64, 64, 8, 8.0f);
-    _sprite.rotationOffset = 90.0f;
+    _spriteMove.Init(RK::COCKROACH_MOVE, 64, 64, 8, 8.0f);
+    _spriteMove.rotationOffset = 90.0f;
+    _spriteDeath.Init(RK::COCKROACH_DEATH, 64, 64, 32, 64.0f, false);
+    _spriteDeath.rotationOffset = 90.0f;
     _transform.scale = 1.0f;
     _transform.rotation = 0.0f;
     _collider.Init(30.0f, _transform);
+}
+
+void Enemy::Kill()
+{
+    if (_state == EnemyState::Dying) return;
+
+    _state = EnemyState::Dying;
+    _spriteDeath.Reset();
+    
+    TraceLog(LOG_INFO, "Enemy killed!");
 }
 
 void Enemy::Retarget()
@@ -22,12 +34,23 @@ void Enemy::Update(float dt)
 {
     if (!_alive) return;
 
-    _retargetTimer -= dt;
-    if (_retargetTimer < 0.0f)
-        Retarget();
-        
-    _transform.MoveForward(_speed * dt);
-    _sprite.Update(dt);
+    switch (_state)
+    {
+        case EnemyState::Moving:
+            _retargetTimer -= dt;
+            if (_retargetTimer < 0.0f)
+                Retarget();
+
+            _transform.MoveForward(_speed * dt);
+            _spriteMove.Update(dt);
+            break;
+        case EnemyState::Dying:
+            _spriteDeath.Update(dt);
+            if (_spriteDeath.finished)
+                Deactivate();
+        default:
+            break;
+    }
 }
 
 void Enemy::Activate(Vector2 position)
@@ -35,6 +58,9 @@ void Enemy::Activate(Vector2 position)
     _alive = true;
     _transform.position = position;
     _retargetTimer = 0.0f;
+    _state = EnemyState::Moving;
+    _spriteDeath.Reset();
+    _spriteMove.Reset();
 
     TraceLog(LOG_INFO, "ENEMY: Activated");
 }
@@ -50,9 +76,17 @@ void Enemy::Deactivate()
 void Enemy::Draw()
 {
     if (!_alive) return;
-    
-    _sprite.Draw(_transform);
 
+    switch (_state)
+    {
+        case EnemyState::Moving:
+            _spriteMove.Draw(_transform);
+            break;;
+        case EnemyState::Dying:
+            _spriteDeath.Draw(_transform);
+            break;;
+    }
+    
     _collider.DrawDebug();
 }
 
