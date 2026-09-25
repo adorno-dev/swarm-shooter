@@ -1,4 +1,4 @@
-# Nome do Projeto
+# Swarm Shooter
 
 Este projeto foi desenvolvido **exclusivamente para fins de estudo e aprendizado**, acompanhando o conteúdo da playlist **[Build a C++ Swarm Shooter with Raylib (no Engine)](https://www.youtube.com/watch?v=PSOeDv8W81o&list=PLZ1QII7yudbd8bgyvoNkYYqtpSSG5UYtS)**, disponível no YouTube.
 
