@@ -10,11 +10,18 @@ Player::Player(const std::string& textureName)
     _transform.scale = GameConfig::PLAYER_SCALE;
     _movement.speed = GameConfig::PLAYER_SPEED;
     _muzzleOffset = GameConfig::PLAYER_MUZZLE_OFFSET;
+    _collider.Init(GameConfig::PLAYER_COLLIDER_RADIUS, _transform);
+    _maxHealth = GameConfig::PLAYER_MAX_HEALTH;
+    _health = GameConfig::PLAYER_MAX_HEALTH;
+    _invTime = GameConfig::PLAYER_INV_TIME;
 }
 
 void Player::Update(float delta)
 {
     _movement.Update(_transform, GI::get().State(), delta, _collisionMap);
+
+    if (_invTimer > 0.0f)
+        _invTimer -= delta;
 }
 
 void Player::SetPosition(Vector2 position)
@@ -32,6 +39,16 @@ Vector2 Player::GetPosition() const
     return _transform.position;
 }
 
+void Player::Hit()
+{
+    if (_invTimer > 0.0f || _health <= 0) return;
+
+    _health--;
+    _invTimer = _invTime;
+
+    TraceLog(LOG_INFO, "Player hit! health: %d/%d", _health, _maxHealth);
+}
+
 Vector2 Player::GetFiringPosition() const
 {
     float rad = _transform.rotation * DEG2RAD;
@@ -41,5 +58,12 @@ Vector2 Player::GetFiringPosition() const
 
 void Player::Draw() const
 {
-    _sprite.Draw(_transform);
+    _sprite.Draw(
+        _transform, 
+        IsInvicible() ? 
+            ColorAlpha(GREEN, fabsf(sinf(GetTime() * 10.0f))) 
+            : WHITE
+    );
+    
+    _collider.DrawDebug();
 }

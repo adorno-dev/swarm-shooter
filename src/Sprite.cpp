@@ -72,7 +72,7 @@ void Sprite::Update(float dt)
     }
 }
 
-void Sprite::Draw(const Transform2D& transform) const
+void Sprite::Draw(const Transform2D& transform, Color tint) const
 {
     if (!texture) return;
 
@@ -92,7 +92,7 @@ void Sprite::Draw(const Transform2D& transform) const
         h * pivot.y,
     };
 
-    DrawTexturePro(*texture, src, dst, origin, transform.rotation + rotationOffset, WHITE);
+    DrawTexturePro(*texture, src, dst, origin, transform.rotation + rotationOffset, tint);
 
     if (GameConfig::SHOW_DEBUG)
         DrawCircle((int)transform.position.x, (int)transform.position.y, 2.0f, RED);

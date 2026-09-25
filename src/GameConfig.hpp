@@ -3,7 +3,7 @@
 
 namespace GameConfig {
     
-    inline bool SHOW_DEBUG = false;
+    inline bool SHOW_DEBUG = true;
 
     constexpr float OFFSCREEN_POS = -9999.0f;
     const Vector2 OFFSCREEN_POSITION = { OFFSCREEN_POS, OFFSCREEN_POS };
@@ -22,6 +22,9 @@ namespace GameConfig {
     }
 
     // Player
+    constexpr float PLAYER_INV_TIME = 1.5f;
+    constexpr int PLAYER_MAX_HEALTH = 3;
+    constexpr float PLAYER_COLLIDER_RADIUS = 22.0f;
     constexpr float PLAYER_SCALE = 0.3f;
     constexpr float PLAYER_SPEED = 200.0f;
     constexpr float AIM_SENSITIVITY = 0.15f;
