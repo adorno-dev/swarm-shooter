@@ -10,6 +10,7 @@ class EnemyManager
 public:
     void Init(Player* player);
     void Spawn(Vector2 pos);
+    void SpawnBatch(int count);
     void Update(float dt);
     void Draw();
     void DeactivateAll();
@@ -24,6 +25,10 @@ public:
         return n;
     }
 private:
+    Vector2 pickSpawnPoint() const;
     std::vector<std::unique_ptr<Enemy>> _pool;
     Player* _player = nullptr;
+    float _staggerInterval = 0.15f;
+    float _staggerTimer = 0.0f;
+    int _batchRemaining = 0;
 };

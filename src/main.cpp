@@ -71,10 +71,7 @@ int main()
             GameConfig::SHOW_DEBUG = !GameConfig::SHOW_DEBUG;
 
         if (IsKeyPressed(KEY_L))
-            for (int i = 0; i < 12; i++)
-                enemies.Spawn({ 
-                    RandomFloat(0.0f, GameConfig::MAP_W), 
-                    RandomFloat(0.0f, GameConfig::MAP_H)});
+            enemies.SpawnBatch(12);
 
         GI::get().Update();
 
