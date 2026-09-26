@@ -30,7 +30,7 @@ void HUD::Init(const Player& player)
     }
 }
 
-void HUD::Draw(int wave, float waveTime, bool waveRunning) const
+void HUD::Draw(int wave, float waveTime, bool waveRunning, int booksAlive, int booksTotal) const
 {
     DrawRectangle(0, 0, GameConfig::BASE_W, BAR_HEIGHT, ColorAlpha(DARKBLUE, 0.8f));
 
@@ -44,7 +44,8 @@ void HUD::Draw(int wave, float waveTime, bool waveRunning) const
     {
         waveColor = waveTime < 8.0f ? RED : WHITE;
         
-        waveText = TextFormat("Wave %d %0.1fs", wave, waveTime);
+        waveText = TextFormat("Wave %d %0.1fs | Books: %d/%d", 
+            wave, waveTime, booksTotal - booksAlive, booksTotal);
     }
     else if (wave > 0) waveText = TextFormat("Wave %d Completed!", wave);
 

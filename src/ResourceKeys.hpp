@@ -10,6 +10,10 @@ namespace RK
     constexpr const char* COCKROACH_MOVE = "cockroach-move";
     constexpr const char* COCKROACH_DEATH = "cockroach-death";
     constexpr const char* HEALTH_POTION = "healthPotion";
+    constexpr const char* BOOK_1 = "book1";
+    constexpr const char* BOOK_2 = "book2";
+    constexpr const char* BOOK_3 = "book3";
+    constexpr const char* BOOK_4 = "book4";
 
     constexpr const char* GAME_BG_COLLISION = "gameBgCollision";
     

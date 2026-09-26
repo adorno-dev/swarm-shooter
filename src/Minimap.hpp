@@ -4,11 +4,13 @@
 
 class Player;
 class EnemyManager;
+class BookManager;
+
 
 class Minimap
 {
 public:
-    void Init(const Player& player, const EnemyManager& enemies);
+    void Init(const Player& player, const EnemyManager& enemies, const BookManager& books);
     void Draw() const;
 
 private:
@@ -16,6 +18,7 @@ private:
 
     const Player* _player = nullptr;
     const EnemyManager* _enemies = nullptr;
+    const BookManager* _books = nullptr;
     float _x = 0.0f;
     float _y = 0.0f;
     float _scaleX = 0.0f;

@@ -4,9 +4,6 @@
 #include "Enemy.hpp"
 #include "PoolObjectManager.hpp"
 
-#include <vector>
-#include <memory>
-
 
 class Player;
 

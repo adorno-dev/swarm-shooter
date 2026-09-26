@@ -12,7 +12,7 @@ class HUD
 {
 public:
     void Init(const Player& player);
-    void Draw(int wave, float waveTime, bool waveRunning) const;
+    void Draw(int wave, float waveTime, bool waveRunning, int booksAlive, int booksTotal) const;
 
 private:
     static constexpr int BAR_HEIGHT = 64;

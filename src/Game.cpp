@@ -16,7 +16,7 @@ Game::Game() : _player(RK::PLAYER)
     GameConfig::MAP_W = (float)background.width;
     GameConfig::MAP_H = (float)background.height;
 
-    _minimap.Init(_player, _enemies);
+    _minimap.Init(_player, _enemies, _books);
     _debugOverlay.Init(_player, _bullets, _enemies, _camera);
     _hud.Init(_player);
 
@@ -30,6 +30,7 @@ Game::Game() : _player(RK::PLAYER)
     _camera.target = GameConfig::MapCenter();
 
     _enemies.Init(&_player);
+    _books.Init(&_player);
 }
 
 Game::~Game() {}
@@ -71,7 +72,7 @@ void Game::Draw(RenderTexture2D& canvas)
     BeginTextureMode(canvas);
     ClearBackground(BLACK);
     drawWorld();
-    _hud.Draw(_wave, _waveTime, _waveRunning);
+    _hud.Draw(_wave, _waveTime, _waveRunning, _books.CountAlive(), _waveBookCount);
     _minimap.Draw();
     _debugOverlay.Draw();
     if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
@@ -86,9 +87,14 @@ void Game::startWave(int wave)
     _waveRunning = true;
     _pauseTimer = 0.0f;
     _healthPotions.DeactivateAll();
+    _books.DeactivateAll();
     _enemies.SpawnBatch(
         GameConfig::WAVE_ENEMY_BASE + 
         GameConfig::WAVE_ENEMY_RAMP * wave);
+
+    int idx = std::clamp(_wave - 1, 0, (int)GameConfig::WAVE_BOOK_COUNTS.size() - 1);
+    _waveBookCount = GameConfig::WAVE_BOOK_COUNTS[idx];
+    _books.SpawnBatch(_waveBookCount);
 }
 
 void Game::updateWaves(float delta)
@@ -103,7 +109,7 @@ void Game::updateWaves(float delta)
             return;
         }
 
-        if (_enemies.IsBatchComplete())
+        if (_enemies.IsBatchComplete() && _books.CountAlive() == 0)
         {
             _waveRunning = false;
             _pauseTimer = 0.0f;
@@ -188,6 +194,14 @@ void Game::updateCollisions()
             healthPotion->Deactivate();
         }
     }
+
+    for (auto& book : _books.GetPool())
+    {
+        if (!book->IsAlive()) continue;
+
+        if (_player.GetCollider().IsCollidingWith(book->GetCollider()))
+            book->Deactivate();
+    }
 }
 
 void Game::drawWorld()
@@ -198,6 +212,7 @@ void Game::drawWorld()
     _bullets.Draw();
     _enemies.Draw();
     _healthPotions.Draw();
+    _books.Draw();
     DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
     EndMode2D();
 }
@@ -245,6 +260,7 @@ void Game::restart()
     _bullets.DeactivateAll();
     _enemies.DeactivateAll();
     _healthPotions.DeactivateAll();
+    _books.DeactivateAll();
     _gameState = GameState::Playing;
     _waveRunning = false;
     _wave = 0;

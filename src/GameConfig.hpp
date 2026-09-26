@@ -1,6 +1,8 @@
 #pragma once
 #include "raylib.h"
 
+#include <array>
+
 
 namespace GameConfig {
     
@@ -10,6 +12,7 @@ namespace GameConfig {
     const Vector2 OFFSCREEN_POSITION = { OFFSCREEN_POS, OFFSCREEN_POS };
 
     constexpr float BOUNDS_MARGIN = 100.0f;
+    constexpr float SPAWN_EDGE_MARGIN = 100.0f;
     constexpr int BASE_W = 1280;
     constexpr int BASE_H = 720;
 
@@ -57,4 +60,7 @@ namespace GameConfig {
     // Minimap
     constexpr int MINIMAP_SIZE = 150;
     constexpr int MINIMAP_PAD = 10;
+
+    // Books
+    constexpr std::array<int, 3> WAVE_BOOK_COUNTS = { 3, 4, 5 };
 }

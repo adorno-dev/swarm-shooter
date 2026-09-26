@@ -9,6 +9,7 @@
 #include "DebugOverlay.hpp"
 #include "HUD.hpp"
 #include "HealthPotionManager.hpp"
+#include "BookManager.hpp"
 
 
 enum class GameState { Playing, GameOver };
@@ -41,12 +42,14 @@ private:
     BulletManager _bullets;
     EnemyManager _enemies;
     HealthPotionManager _healthPotions;
-    GameState _gameState = GameState::Playing;
+    BookManager _books;
     Minimap _minimap;
     DebugOverlay _debugOverlay;
     HUD _hud;
+    GameState _gameState = GameState::Playing;
 
     int _wave = 0;
+    int _waveBookCount = 0;
     float _waveTime = 0.0f;
     bool _waveRunning = false;
     float _pauseTimer = 0.0f;

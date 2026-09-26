@@ -4,9 +4,6 @@
 #include "Bullet.hpp"
 #include "PoolObjectManager.hpp"
 
-#include <vector>
-#include <memory>
-
 
 class BulletManager : public PoolObjectManager<Bullet>
 {
