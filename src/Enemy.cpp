@@ -8,15 +8,36 @@
 #include "SwarmUtils.hpp"
 
 
-Enemy::Enemy()
+void Enemy::Init(const EnemyDef& def)
 {
-    _spriteMove.Init(RK::COCKROACH_MOVE, 64, 64, 8, 8.0f);
-    _spriteMove.rotationOffset = 90.0f;
-    _spriteDeath.Init(RK::COCKROACH_DEATH, 64, 64, 32, 64.0f, false);
-    _spriteDeath.rotationOffset = 90.0f;
-    _transform.scale = 1.0f;
+
+    _spriteMove.Init(
+        def.move.textureKey,
+        def.move.frameWidth,
+        def.move.frameHeight,
+        def.move.frameCount,
+        def.move.framesPerSecond,
+        def.move.loop);
+
+    _spriteMove.rotationOffset = def.move.rotationOffset;
+
+    _spriteDeath.Init(
+        def.death.textureKey,
+        def.death.frameWidth,
+        def.death.frameHeight,
+        def.death.frameCount,
+        def.death.framesPerSecond,
+        def.death.loop);
+    
+    _spriteDeath.rotationOffset = def.death.rotationOffset;
+    _transform.scale = def.scale;
     _transform.rotation = 0.0f;
-    _collider.Init(30.0f, _transform);
+    _speed = def.speed;
+    _collider.Init(def.colliderRadius, _transform);
+    _retargetMin = def.retargetMin;
+    _retargetMax = def.retargetMax;
+    _behaviour = def.behaviour;
+    _turnSpeed = def.turnSpeed;
 }
 
 void Enemy::Kill()
@@ -35,6 +56,21 @@ void Enemy::Retarget()
     _retargetTimer = RandomFloat(_retargetMin, _retargetMax);
 }
 
+void Enemy::homingSteer(float delta)
+{
+    float desired = AngleToTargetDeg(_transform.position, _player->GetPosition());
+    float diff = desired - _transform.rotation;
+
+    while (diff > 180.0f) diff -= 360.0f;
+    while (diff < -180.0f) diff += 360.0f;
+
+    float maxStep = _turnSpeed * delta;
+    if (diff > maxStep) diff = maxStep;
+    if (diff > -maxStep) diff = -maxStep;
+
+    _transform.rotation += diff;
+}
+
 void Enemy::Update(float delta)
 {
     if (!_alive) return;
@@ -42,10 +78,14 @@ void Enemy::Update(float delta)
     switch (_state)
     {
         case EnemyState::Moving:
-            _retargetTimer -= delta;
-            if (_retargetTimer < 0.0f)
-                Retarget();
-
+            if (_behaviour == EnemyBehavior::Homing)
+                homingSteer(delta);
+            else
+            {
+                _retargetTimer -= delta;
+                if (_retargetTimer < 0.0f)
+                    Retarget();
+            }
             _transform.MoveForward(_speed * delta);
             _spriteMove.Update(delta);
             break;

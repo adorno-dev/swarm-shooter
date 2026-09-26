@@ -30,8 +30,14 @@ void ResourceManager::Load()
     loadTexture(RK::GAME_BG, "Floor.png");
     loadTexture(RK::GAME_FG, "Walls.png");
     loadTexture(RK::BULLET, "bullet.png");
+
     loadTexture(RK::COCKROACH_MOVE, "cockroach-move.png");
     loadTexture(RK::COCKROACH_DEATH, "cockroach-death.png");
+    loadTexture(RK::SCORPION_MOVE, "scorpion-move.png");
+    loadTexture(RK::SCORPION_DEATH, "scorpion-death-0.png");
+    loadTexture(RK::KLIVER_MOVE, "kliver-move.png");
+    loadTexture(RK::KLIVER_DEATH, "kliver-death.png");
+
     loadTexture(RK::HEALTH_POTION, "healthPotion.png");
     loadTexture(RK::BOOK_1, "book1.png");
     loadTexture(RK::BOOK_2, "book2.png");

@@ -4,6 +4,8 @@
 #include "Enemy.hpp"
 #include "PoolObjectManager.hpp"
 
+#include <vector>
+
 
 class Player;
 
@@ -17,8 +19,10 @@ public:
     bool IsBatchComplete() const { return _batchRemaining == 0 && CountAlive() == 0; }
 
 private:
-    void Spawn(Vector2 pos);
+    void Spawn(const EnemyDef& def, Vector2 pos);
     Vector2 pickSpawnPoint() const;
+
+    std::vector<EnemyDef> _defs;
     
     Player* _player = nullptr;
     float _staggerInterval = 0.15f;

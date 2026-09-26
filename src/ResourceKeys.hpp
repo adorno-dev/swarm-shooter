@@ -9,6 +9,11 @@ namespace RK
     constexpr const char* BULLET = "bullet";
     constexpr const char* COCKROACH_MOVE = "cockroach-move";
     constexpr const char* COCKROACH_DEATH = "cockroach-death";
+    constexpr const char* SCORPION_MOVE = "scorpion-move";
+    constexpr const char* SCORPION_DEATH = "scorpion-death";
+    constexpr const char* KLIVER_MOVE = "kliver-move";
+    constexpr const char* KLIVER_DEATH = "kliver-death";
+    
     constexpr const char* HEALTH_POTION = "healthPotion";
     constexpr const char* BOOK_1 = "book1";
     constexpr const char* BOOK_2 = "book2";

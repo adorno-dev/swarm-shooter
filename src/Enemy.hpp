@@ -15,11 +15,33 @@ enum class EnemyState
     Dying
 };
 
+enum class EnemyBehavior
+{
+    Retarget,
+    Homing
+};
+
+struct EnemyDef
+{
+    SpriteDef move;
+    SpriteDef death;
+
+    float scale = 1.0f;
+    float speed = 80.0f;
+    float colliderRadius = 30.0f;
+    float retargetMin = 1.0f;
+    float retargetMax = 2.0f;
+
+    EnemyBehavior behaviour = EnemyBehavior::Retarget;
+    float turnSpeed = 90.0f;
+};
+
+
 class Enemy : public PoolObject
 {
 public:
-    Enemy();
-
+    Enemy() = default;
+    void Init(const EnemyDef& def);
     void Update(float delta) override;
     void Draw() override;
     void Deactivate() override;
@@ -47,5 +69,9 @@ private:
     float _retargetMin = 1.0f;
     float _retargetMax = 2.0f;
 
+    EnemyBehavior _behaviour = EnemyBehavior::Retarget;
+    float _turnSpeed = 90.0f;
+
     void Retarget();
+    void homingSteer(float delta);
 };

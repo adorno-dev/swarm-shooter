@@ -6,6 +6,17 @@
 #include <string>
 #include <vector>
 
+struct SpriteDef
+{
+    const char* textureKey = nullptr;
+    int frameWidth = 0;
+    int frameHeight = 0;
+    int frameCount = 1;
+    float framesPerSecond = 1.0f;
+    float rotationOffset = 0.0f;
+    bool loop = false;
+};
+
 
 struct Sprite
 {
