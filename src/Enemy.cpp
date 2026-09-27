@@ -46,8 +46,6 @@ void Enemy::Kill()
 
     _state = EnemyState::Dying;
     _spriteDeath.Reset();
-    
-    TraceLog(LOG_INFO, "Enemy killed!");
 }
 
 void Enemy::Retarget()
@@ -106,16 +104,12 @@ void Enemy::Activate(Vector2 position)
     _state = EnemyState::Moving;
     _spriteDeath.Reset();
     _spriteMove.Reset();
-
-    TraceLog(LOG_INFO, "ENEMY: Activated");
 }
 
 void Enemy::Deactivate()
 {
     _alive = false;
     _transform.position = GameConfig::OFFSCREEN_POSITION;
-
-    TraceLog(LOG_INFO, "ENEMY: Deactivated");
 }
 
 void Enemy::Draw()

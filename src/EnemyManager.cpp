@@ -44,8 +44,6 @@ void EnemyManager::SpawnBatch(int count)
 {
     _batchRemaining = count;
     _staggerTimer = 0.0f;
-
-    TraceLog(LOG_INFO, "ENEMY_MGR: Batch of %d enemies queued.", count);
 }
 
 void EnemyManager::Spawn(const EnemyDef& def, Vector2 pos)
@@ -54,8 +52,6 @@ void EnemyManager::Spawn(const EnemyDef& def, Vector2 pos)
     enemy->Init(def);
     enemy->Activate(pos);
     enemy->SetPlayer(_player);
-
-    TraceLog(LOG_INFO, "ENEMY_MGR: Pool growing (size: %d)", (int)_pool.size());
 }
 
 void EnemyManager::Update(float delta)

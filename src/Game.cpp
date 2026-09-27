@@ -72,12 +72,34 @@ void Game::Draw(RenderTexture2D& canvas)
     BeginTextureMode(canvas);
     ClearBackground(BLACK);
     drawWorld();
-    _hud.Draw(_wave, _waveTime, _waveRunning, _books.CountAlive(), _waveBookCount);
+    HUDInfo hudInfo = { _wave, _waveTime, _waveRunning, _books.CountAlive(), _waveBookCount, _lastWaveBonus };
+    _hud.Draw(hudInfo);
     _minimap.Draw();
     _debugOverlay.Draw();
     if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
     if (_gameState == GameState::GameOver) drawGameOverOverlay();
     EndTextureMode();
+}
+
+float Game::accuracy() const
+{
+    if (_shotsFired == 0)
+        return 0.0f;
+    return ((float)_killCount / (float)_shotsFired) * 100.0f;
+}
+
+void Game::completeWave()
+{
+    int timeBonus = (int)_waveTime;
+    int waveBonus = _wave * GameConfig::WAVE_BONUS_BASE;
+    int accuracyBonus = (int)accuracy();
+    _lastWaveBonus = timeBonus + waveBonus + accuracyBonus;
+    _score = _lastWaveBonus;
+    _waveRunning = false;
+    _pauseTimer = 0.0f;
+
+    TraceLog(LOG_INFO, "Game ave %d complete: _wavetime: %.1f timeBonus: %d waveBonus: %d accuracyBonus: %d _score: %d",
+        _wave, _waveTime, timeBonus, waveBonus, accuracyBonus, _score);
 }
 
 void Game::startWave(int wave)
@@ -110,10 +132,7 @@ void Game::updateWaves(float delta)
         }
 
         if (_enemies.IsBatchComplete() && _books.CountAlive() == 0)
-        {
-            _waveRunning = false;
-            _pauseTimer = 0.0f;
-        }
+            completeWave();
     }
     else
     {
@@ -127,7 +146,10 @@ void Game::updateWaves(float delta)
 void Game::updateShooting()
 {
     if (GI::get().State().shoot)
+    {
         _bullets.Spawn(_player.GetFiringPosition(), GI::get().State().aimAngle);
+        _shotsFired++;
+    }
 }
 
 void Game::updateEntities(float delta)
@@ -169,6 +191,7 @@ void Game::updateCollisions()
             {
                 bullet->Deactivate();
                 enemy->Kill();
+                _killCount++;
                 if (GetRandomValue(0, 100) <= GameConfig::HEALTH_DROP_CHANCE)
                     _healthPotions.Spawn(enemy->GetPosition());
                 break;
@@ -222,35 +245,23 @@ void Game::drawGameOverOverlay()
     DrawRectangle(0, 0, GameConfig::BASE_W, GameConfig::BASE_H, ColorAlpha(BLACK, 0.7f));
 
     const char* title = "GAME OVER";
-    int titleW = MeasureText(title, 60);
+    DrawCenteredText(title, GameConfig::BASE_H / 2 - 60, 60, RED);
 
-    DrawText(title, 
-        (GameConfig::BASE_W - titleW) / 2,
-         GameConfig::BASE_H / 2 - 60, 60, RED);
+    const char* stats = TextFormat("Wave %d | Score: %d | Killed: %d | Acc.: %.1f%%",
+        _wave, _score, _killCount, accuracy());
+    DrawCenteredText(stats, GameConfig::BASE_H / 2 + 12, 20, WHITE);
 
     const char* prompt = "Press R to restart";
-    int promptW = MeasureText(prompt, 32);
-
-    DrawText(prompt, 
-        (GameConfig::BASE_W - promptW) / 2,
-         GameConfig::BASE_H / 2 + 12, 32, RAYWHITE);
+    DrawCenteredText(prompt, GameConfig::BASE_H / 2 + 48, 32, RAYWHITE);
 }
 
 void Game::drawGetReadyOverlay()
 {
     const char* title = "Wave";
-    int titleW = MeasureText(title, 60);
-
-    DrawText(title, 
-        (GameConfig::BASE_W - titleW) / 2,
-         GameConfig::BASE_H / 4 - 60, 60, RAYWHITE);
+    DrawCenteredText(title, GameConfig::BASE_H / 4 - 60, 60, RAYWHITE);
 
     const char* prompt = "Get ready...";
-    int promptW = MeasureText(prompt, 32);
-
-    DrawText(prompt, 
-        (GameConfig::BASE_W - promptW) / 2,
-         GameConfig::BASE_H / 4 + 12, 32, GRAY);
+    DrawCenteredText(prompt, GameConfig::BASE_H / 4 + 12, 32, GRAY);
 }
 
 void Game::restart()
@@ -265,4 +276,8 @@ void Game::restart()
     _waveRunning = false;
     _wave = 0;
     _pauseTimer = 0.0f;
+    _shotsFired = 0;
+    _killCount = 0;
+    _score = 0;
+    _lastWaveBonus = 0;
 }

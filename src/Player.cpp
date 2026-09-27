@@ -57,8 +57,6 @@ void Player::Hit()
 
     _health--;
     _invTimer = _invTime;
-
-    TraceLog(LOG_INFO, "Player hit! health: %d/%d", _health, _maxHealth);
 }
 
 void Player::Heal(int amount)

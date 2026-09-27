@@ -40,9 +40,6 @@ void Sprite::Init(const std::string& textureName, int fw, int fh, int count, flo
         };
 
         sourceRects.push_back(std::move(r));
-
-        // TraceLog(LOG_INFO, "Sprite frame %d: x=%f.0f y=%.0f w=%.0f h=%.0f", 
-        //     i, r.x, r.y, r.width, r.height);
     }
 }
 

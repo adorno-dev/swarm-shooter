@@ -35,6 +35,8 @@ private:
     void restart();
     void updateWaves(float delta);
     void updateCollisions();
+    float accuracy() const;
+    void completeWave();
 
     Player _player;
     CollisionMap _collisionMap;
@@ -53,4 +55,8 @@ private:
     float _waveTime = 0.0f;
     bool _waveRunning = false;
     float _pauseTimer = 0.0f;
+    int _shotsFired = 0;
+    int _killCount = 0;
+    int _score = 0;
+    int _lastWaveBonus = 0;
 };

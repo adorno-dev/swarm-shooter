@@ -7,12 +7,22 @@
 
 class Player;
 
+struct HUDInfo
+{
+    int wave;
+    float waveTime;
+    bool waveRunning;
+    int booksAlive;
+    int booksTotal;
+    int lastWaveBonus;
+};
+
 
 class HUD
 {
 public:
     void Init(const Player& player);
-    void Draw(int wave, float waveTime, bool waveRunning, int booksAlive, int booksTotal) const;
+    void Draw(const HUDInfo& info) const;
 
 private:
     static constexpr int BAR_HEIGHT = 64;

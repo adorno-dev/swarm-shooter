@@ -19,7 +19,7 @@ void HUD::Init(const Player& player)
 
     float scaledW = _lifeTex->width * iconScale;
     float scaledH = _lifeTex->height * iconScale;
-    float yPosition = (BAR_HEIGHT - scaledH);
+    float yPosition = (BAR_HEIGHT - scaledH) * 0.5f;
     float step = scaledW + 10.0f;
 
     for (int i = 0; i < GameConfig::PLAYER_MAX_HEALTH; i++)
@@ -30,7 +30,7 @@ void HUD::Init(const Player& player)
     }
 }
 
-void HUD::Draw(int wave, float waveTime, bool waveRunning, int booksAlive, int booksTotal) const
+void HUD::Draw(const HUDInfo& info) const
 {
     DrawRectangle(0, 0, GameConfig::BASE_W, BAR_HEIGHT, ColorAlpha(DARKBLUE, 0.8f));
 
@@ -40,21 +40,20 @@ void HUD::Draw(int wave, float waveTime, bool waveRunning, int booksAlive, int b
 
     const char* waveText = nullptr;
 
-    if (waveRunning)
+    if (info.waveRunning)
     {
-        waveColor = waveTime < 8.0f ? RED : WHITE;
+        waveColor = info.waveTime < 8.0f ? RED : WHITE;
         
         waveText = TextFormat("Wave %d %0.1fs | Books: %d/%d", 
-            wave, waveTime, booksTotal - booksAlive, booksTotal);
+            info.wave, 
+            info.waveTime, 
+            info.booksTotal - info.booksAlive, 
+            info.booksTotal);
     }
-    else if (wave > 0) waveText = TextFormat("Wave %d Completed!", wave);
+    else if (info.wave > 0) waveText = TextFormat("Wave %d Completed!   +%d", info.wave, info.lastWaveBonus);
 
     if (waveText)
-    {
-        int textW = MeasureText(waveText, fontSize);
-
-        DrawText(waveText, GameConfig::HALF_BASE_W - textW / 2, 18, fontSize, waveColor);
-    }
+        DrawCenteredText(waveText, 18, fontSize, waveColor);
 
     for (int i = 0; i < _player->GetHealth(); i++)
         DrawTexturePro(*_lifeTex, _lifeSrc, _lifeDst[i], {0,0}, 0.0f, WHITE);

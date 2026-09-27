@@ -39,3 +39,9 @@ inline Vector2 RandomSpawnPoint(Vector2 avoidPosition, float minDistance)
 
     return candidate;
 }
+
+inline void DrawCenteredText(const char* text, int yPos, int fontSize, Color tint)
+{
+    int xPos = (GameConfig::BASE_W - MeasureText(text, fontSize)) / 2;
+    DrawText(text, xPos, yPos, fontSize, tint);
+}
