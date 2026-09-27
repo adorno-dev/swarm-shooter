@@ -19,6 +19,11 @@ void ResourceManager::Unload()
 
     _images.clear();
 
+    for (auto& [name, mus] : _music)
+        UnloadMusicStream(mus);
+
+    _music.clear();
+
     TraceLog(LOG_INFO, "ResourceManager: all resources unloaded.");
 }
 
@@ -48,8 +53,14 @@ void ResourceManager::Load()
 
     loadImage(RK::GAME_BG_COLLISION, "gameBgCollision.png");
 
+
+    ChangeDirectory(TextFormat("%s/../assets/audio", GetApplicationDirectory()));
+
+    loadMusic(RK::MUSIC_MAIN, "Darkling.mp3");
+
     TraceLog(LOG_INFO, "ResourceManager: loaded %d textures", (int)_textures.size());
     TraceLog(LOG_INFO, "ResourceManager: loaded %d images", (int)_images.size());
+    TraceLog(LOG_INFO, "ResourceManager: loaded %d music files", (int)_music.size());
 }
 
 void ResourceManager::loadTexture(const std::string& name, const std::string& path)
@@ -72,6 +83,16 @@ void ResourceManager::loadImage(const std::string& name, const std::string& path
         _images.emplace(name, std::move(img));
 }
 
+void ResourceManager::loadMusic(const std::string& name, const std::string& path)
+{
+    Music mus = LoadMusicStream(path.c_str());
+
+    if (mus.frameCount == 0)
+        throw std::runtime_error("Failed to load music: " + path);
+    
+        _music.emplace(name, std::move(mus));
+}
+
 const Texture2D& ResourceManager::GetTexture(const std::string& name) const
 {
     auto it = _textures.find(name);
@@ -85,5 +106,13 @@ const Image& ResourceManager::GetImage(const std::string& name) const
     auto it = _images.find(name);
     if (it == _images.end())
         throw std::runtime_error("Image not found: '" + name + "'");
+    return it->second;
+}
+
+Music& ResourceManager::GetMusic(const std::string& name)
+{
+    auto it = _music.find(name);
+    if (it == _music.end())
+        throw std::runtime_error("Music not found: '" + name + "'");
     return it->second;
 }

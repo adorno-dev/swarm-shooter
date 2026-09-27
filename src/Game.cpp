@@ -31,6 +31,9 @@ Game::Game() : _player(RK::PLAYER)
 
     _enemies.Init(&_player);
     _books.Init(&_player);
+
+    _music.Init(RK::MUSIC_MAIN);
+    _music.Start(0.4f);
 }
 
 Game::~Game() {}
@@ -50,12 +53,27 @@ bool Game::HandleInput()
 
     if (_gameState == GameState::GameOver && IsKeyPressed(KEY_R))
         restart();
+    else if (_gameState == GameState::Menu && IsKeyPressed(KEY_ENTER))
+    {
+        restart();
+        _gameState = GameState::Playing;
+
+        DisableCursor();
+    }
+    else if ((_gameState == GameState::Playing || _gameState == GameState::GameOver) && IsKeyPressed(KEY_M))
+    {
+        _gameState = GameState::Menu;
+
+        EnableCursor();
+    }
 
     return false;
 }
 
 void Game::Update(float delta)
 {
+    _music.Update();
+
     if (_gameState != GameState::Playing) return;
 
     updateEntities(delta);
@@ -71,13 +89,18 @@ void Game::Draw(RenderTexture2D& canvas)
 {
     BeginTextureMode(canvas);
     ClearBackground(BLACK);
-    drawWorld();
-    HUDInfo hudInfo = { _wave, _waveTime, _waveRunning, _books.CountAlive(), _waveBookCount, _lastWaveBonus };
-    _hud.Draw(hudInfo);
-    _minimap.Draw();
-    _debugOverlay.Draw();
-    if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
-    if (_gameState == GameState::GameOver) drawGameOverOverlay();
+    if (_gameState == GameState::Menu)
+        drawStartScreen();
+    else 
+    {
+        drawWorld();
+        HUDInfo hudInfo = { _wave, _waveTime, _waveRunning, _books.CountAlive(), _waveBookCount, _lastWaveBonus };
+        _hud.Draw(hudInfo);
+        _minimap.Draw();
+        _debugOverlay.Draw();
+        if (_gameState == GameState::Playing && !_waveRunning)  drawGetReadyOverlay();
+        if (_gameState == GameState::GameOver) drawGameOverOverlay();
+    }
     EndTextureMode();
 }
 
@@ -238,6 +261,12 @@ void Game::drawWorld()
     _books.Draw();
     DrawTexture(RM::get().GetTexture(RK::GAME_FG), 0, 0, WHITE);
     EndMode2D();
+}
+
+void Game::drawStartScreen()
+{
+    DrawCenteredText("SWARM", GameConfig::BASE_H / 2 - 60, 60, RAYWHITE);
+    DrawCenteredText("Press ENTER to start", GameConfig::BASE_H / 2 + 12, 32, GRAY);
 }
 
 void Game::drawGameOverOverlay()

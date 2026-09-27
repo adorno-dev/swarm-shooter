@@ -11,8 +11,8 @@ int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(GameConfig::BASE_W, GameConfig::BASE_H, "Swarm");
+    InitAudioDevice();
     SetTargetFPS(60);
-    DisableCursor();
     SetExitKey(KEY_NULL);
 
     RM::get().Load();
@@ -46,6 +46,7 @@ int main()
 
     UnloadRenderTexture(canvas);
     RM::get().Unload();
+    CloseAudioDevice();
     CloseWindow();
 
     return EXIT_SUCCESS;

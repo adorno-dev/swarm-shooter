@@ -10,9 +10,10 @@
 #include "HUD.hpp"
 #include "HealthPotionManager.hpp"
 #include "BookManager.hpp"
+#include "MusicPlayer.hpp"
 
 
-enum class GameState { Playing, GameOver };
+enum class GameState { Menu, Playing, GameOver };
 
 class Game
 {
@@ -28,6 +29,7 @@ private:
     void drawWorld();
     void drawGameOverOverlay();
     void drawGetReadyOverlay();
+    void drawStartScreen();
     void updateEntities(float delta);
     void updateCamera();
     void updateShooting();
@@ -48,7 +50,8 @@ private:
     Minimap _minimap;
     DebugOverlay _debugOverlay;
     HUD _hud;
-    GameState _gameState = GameState::Playing;
+    MusicPlayer _music;
+    GameState _gameState = GameState::Menu;
 
     int _wave = 0;
     int _waveBookCount = 0;

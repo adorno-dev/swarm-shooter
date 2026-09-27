@@ -23,15 +23,18 @@ public:
 
     const Texture2D& GetTexture(const std::string& name) const;
     const Image& GetImage(const std::string& name) const;
+    Music& GetMusic(const std::string& name);
 
 private:
     ResourceManager() = default;
 
     void loadTexture(const std::string& name, const std::string& path);
     void loadImage(const std::string& name, const std::string& path);
+    void loadMusic(const std::string& name, const std::string& path);
 
     std::unordered_map<std::string, Texture2D> _textures;
     std::unordered_map<std::string, Image> _images;
+    std::unordered_map<std::string, Music> _music;
 };
 
 // RM::get()

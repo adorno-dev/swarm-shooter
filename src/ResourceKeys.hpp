@@ -23,5 +23,8 @@ namespace RK
     constexpr const char* PARTICLE_DOT = "particleDot";
 
     constexpr const char* GAME_BG_COLLISION = "gameBgCollision";
+
+
+    constexpr const char* MUSIC_MAIN = "musicMain";
     
 }
