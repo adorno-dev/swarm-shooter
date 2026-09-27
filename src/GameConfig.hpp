@@ -6,7 +6,7 @@
 
 namespace GameConfig {
     
-    inline bool SHOW_DEBUG = true;
+    inline bool SHOW_DEBUG = false;
 
     constexpr float OFFSCREEN_POS = -9999.0f;
     const Vector2 OFFSCREEN_POSITION = { OFFSCREEN_POS, OFFSCREEN_POS };

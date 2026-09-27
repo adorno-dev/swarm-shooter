@@ -38,6 +38,9 @@ void Enemy::Init(const EnemyDef& def)
     _retargetMax = def.retargetMax;
     _behaviour = def.behaviour;
     _turnSpeed = def.turnSpeed;
+
+    _spawnPuff.Init(def.spawnPuff);
+    _deathPuff.Init(def.deathPuff);
 }
 
 void Enemy::Kill()
@@ -46,6 +49,7 @@ void Enemy::Kill()
 
     _state = EnemyState::Dying;
     _spriteDeath.Reset();
+    _deathPuff.Emit(_transform.position);
 }
 
 void Enemy::Retarget()
@@ -71,6 +75,9 @@ void Enemy::homingSteer(float delta)
 
 void Enemy::Update(float delta)
 {
+    _spawnPuff.Update(delta);
+    _deathPuff.Update(delta);
+
     if (!_alive) return;
 
     switch (_state)
@@ -89,7 +96,7 @@ void Enemy::Update(float delta)
             break;
         case EnemyState::Dying:
             _spriteDeath.Update(delta);
-            if (_spriteDeath.finished)
+            if (_spriteDeath.finished && _deathPuff.IsIdle())
                 Deactivate();
         default:
             break;
@@ -100,10 +107,12 @@ void Enemy::Activate(Vector2 position)
 {
     _alive = true;
     _transform.position = position;
+    _transform.LookAt(_player->GetPosition());
     _retargetTimer = 0.0f;
     _state = EnemyState::Moving;
     _spriteDeath.Reset();
     _spriteMove.Reset();
+    _spawnPuff.Emit(position);
 }
 
 void Enemy::Deactivate()
@@ -127,6 +136,8 @@ void Enemy::Draw()
     }
     
     _collider.DrawDebug();
+    _spawnPuff.Draw();
+    _deathPuff.Draw();
 }
 
 void Enemy::SetPosition(Vector2 position)

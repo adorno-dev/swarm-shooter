@@ -44,6 +44,8 @@ void ResourceManager::Load()
     loadTexture(RK::BOOK_3, "book3.png");
     loadTexture(RK::BOOK_4, "book4.png");
 
+    loadTexture(RK::PARTICLE_DOT, "ParticleDot.png");
+
     loadImage(RK::GAME_BG_COLLISION, "gameBgCollision.png");
 
     TraceLog(LOG_INFO, "ResourceManager: loaded %d textures", (int)_textures.size());

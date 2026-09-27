@@ -53,10 +53,11 @@ Vector2 Player::GetPosition() const
 
 void Player::Hit()
 {
-    if (_invTimer > 0.0f || _health <= 0) return;
+    return;
+    // if (_invTimer > 0.0f || _health <= 0) return;
 
-    _health--;
-    _invTimer = _invTime;
+    // _health--;
+    // _invTimer = _invTime;
 }
 
 void Player::Heal(int amount)

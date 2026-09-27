@@ -5,6 +5,7 @@
 #include "Transform2D.hpp"
 #include "Sprite.hpp"
 #include "CircleCollider.hpp"
+#include "ParticleSystem.hpp"
 
 
 class Player;
@@ -34,6 +35,9 @@ struct EnemyDef
 
     EnemyBehavior behaviour = EnemyBehavior::Retarget;
     float turnSpeed = 90.0f;
+
+    ParticleConfig spawnPuff;
+    ParticleConfig deathPuff;
 };
 
 
@@ -60,6 +64,8 @@ private:
     Sprite _spriteMove;
     Sprite _spriteDeath;
     CircleCollider _collider;
+    ParticleSystem _spawnPuff;
+    ParticleSystem _deathPuff;
     const Player* _player = nullptr;
 
     EnemyState _state = EnemyState::Moving;

@@ -20,6 +20,8 @@ namespace RK
     constexpr const char* BOOK_3 = "book3";
     constexpr const char* BOOK_4 = "book4";
 
+    constexpr const char* PARTICLE_DOT = "particleDot";
+
     constexpr const char* GAME_BG_COLLISION = "gameBgCollision";
     
 }

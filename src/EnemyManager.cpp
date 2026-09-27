@@ -7,6 +7,7 @@
 #include "GameConfig.hpp"
 #include "SwarmUtils.hpp"
 #include "Player.hpp"
+#include "ParticleConfigs.hpp"
 
 
 void EnemyManager::Init(Player* player)
@@ -18,26 +19,32 @@ void EnemyManager::Init(Player* player)
             { RK::COCKROACH_MOVE, 64, 64, 8, 8.0f, 90.0f, true },
             { RK::COCKROACH_DEATH, 64, 64, 32, 64.0f, 90.0f, false },
             1.0f, 85.0f, 30.0f, 1.0f, 2.0f,
-            EnemyBehavior::Retarget, 90.0f
+            EnemyBehavior::Retarget, 90.0f,
+            SPAWN_PUFF,
+            DEATH_PUFF
         },
         {
             { RK::SCORPION_MOVE, 64, 64, 4, 4.0f, 90.0f, true },
             { RK::SCORPION_DEATH, 64, 64, 8, 16.0f, 90.0f, false },
             1.0f, 70.0f, 30.0f, 1.7f, 4.0f,
-            EnemyBehavior::Retarget, 70.0f
+            EnemyBehavior::Retarget, 70.0f,
+            SPAWN_PUFF,
+            DEATH_PUFF
         },
         {
             { RK::KLIVER_MOVE, 64, 64, 8, 8.0f, 90.0f, true },
             { RK::KLIVER_DEATH, 64, 64, 16, 32.0f, 90.0f, false },
             1.0f, 110.0f, 30.0f, 2.0f, 3.0f,
-            EnemyBehavior::Retarget, 90.0f
+            EnemyBehavior::Retarget, 90.0f,
+            SPAWN_PUFF,
+            DEATH_PUFF
         }
     };
 }
 
 Vector2 EnemyManager::pickSpawnPoint() const
 {
-    return RandomSpawnPoint(_player->GetPosition(), 200.0f);
+    return RandomSpawnPoint(_player->GetPosition(), 150.0f);
 }
 
 void EnemyManager::SpawnBatch(int count)
@@ -50,8 +57,8 @@ void EnemyManager::Spawn(const EnemyDef& def, Vector2 pos)
 {
     auto* enemy = spawnInPool();
     enemy->Init(def);
+    enemy->SetPlayer(_player); // order important
     enemy->Activate(pos);
-    enemy->SetPlayer(_player);
 }
 
 void EnemyManager::Update(float delta)
